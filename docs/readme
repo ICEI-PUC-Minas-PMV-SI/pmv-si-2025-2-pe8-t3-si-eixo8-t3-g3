@@ -1,1 +1,118 @@
-Poste neste diretório todos os artefatos criados durante o desenvolvimento do TCC
+# Documento – Etapa 1: Definição da Empresa, Mercado, Processos e Sistemas
+
+### 1.1 Apresentação da Empresa
+
+A empresa escolhida para o desenvolvimento deste trabalho é a UP! Escola de Música, localizada na cidade de Contagem/MG. Fundada em 2018, a instituição atua no setor de serviços educacionais, oferecendo aulas de instrumentos musicais (violão, guitarra, piano, teclado, bateria, violino, contrabaixo, flauta doce), canto, musicalização infantil e teoria musical, tanto em formato presencial quanto online.
+
+Atualmente, a escola possui aproximadamente 130 alunos matriculados e conta com uma equipe de 08 colaboradores, entre professores, coordenação pedagógica e equipe administrativa. A estrutura física dispõe de salas individuais equipadas com isolamento acústico, auditório para apresentações internas e estúdio para gravações didáticas.
+
+A escolha desta empresa se justifica por três motivos principais:
+
+É uma organização de pequeno porte, com processos gerenciais e administrativos ainda em fase de amadurecimento;
+
+Coleta e armazena dados sobre alunos, mensalidades, matrículas e agendamento de aulas em planilhas eletrônicas e aplicativos de mensagens, sem a utilização de um sistema integrado;
+
+Demonstra abertura para colaboração acadêmica, permitindo a análise de seus processos e a proposição de melhorias através de sistemas de informação.
+
+### 1.2 Análise de Mercado
+
+#### Segmento de Atuação
+
+A UP! Escola de Música atua no segmento de serviços educacionais, mais especificamente no ensino de música e desenvolvimento artístico. O setor apresenta crescimento constante, impulsionado pela valorização da educação extracurricular e pelo aumento da demanda por atividades culturais.
+
+#### Concorrência e Práticas do Setor
+
+O mercado de escolas de música é altamente competitivo, contando tanto com escolas especializadas quanto com professores particulares que oferecem aulas individuais. Além disso, a difusão de cursos online e aplicativos de aprendizado musical (ex.: Cifra Club, Yousician, Simply Piano) representa uma concorrência indireta significativa.
+
+Práticas comuns no setor incluem:
+
+Planos de mensalidade com diferentes modalidades (presencial, online, híbrido);
+
+Aulas em grupo ou individuais;
+
+Realização de eventos e recitais para fidelização dos alunos;
+
+Uso de marketing digital (redes sociais, YouTube, TikTok) para atrair novos estudantes.
+
+#### Matriz SWOT
+
+**Forças**
+
+Corpo docente qualificado com experiência no mercado musical;
+
+Estrutura física equipada com salas acústicas e estúdio;
+
+Reconhecimento local e boa reputação junto à comunidade.
+
+**Fraquezas**
+
+Dependência de planilhas para controle de alunos e finanças;
+
+Ausência de dashboards ou relatórios de desempenho;
+
+Comunicação administrativa descentralizada (WhatsApp, e-mail, papel, planilha).
+
+**Oportunidades**
+
+Crescente demanda por cursos online e híbridos;
+
+Parcerias com produtoras culturais e escolas regulares;
+
+Possibilidade de implementação de sistemas de informação para gestão integrada e marketing digital.
+
+**Ameaças**
+
+Concorrência de plataformas digitais de ensino musical;
+
+Alta rotatividade de alunos devido a fatores financeiros;
+
+Crises econômicas que reduzem gastos com atividades extracurriculares.
+
+### 1.3 Análise de Processos e Sistemas
+
+#### Processos e Fluxos de Trabalho
+
+Atualmente, os principais processos da escola são:
+
+Matrícula de novos alunos – realizada presencialmente ou por formulário online, com dados registrados manualmente em planilhas;
+
+Agendamento de aulas – feito pela secretaria via planilhas e comunicação por WhatsApp;
+
+Controle financeiro – mensalidades registradas em planilhas do Excel, com conciliação manual entre pagamentos e alunos ativos;
+
+Gestão pedagógica – professores entregam relatórios de presença e desempenho em papel ou arquivos digitais não padronizados;
+
+Divulgação e captação – marketing digital em redes sociais, sem acompanhamento de métricas integradas.
+
+#### BPMN (Exemplo de Processos Principais)
+
+O diagrama deve ser elaborado em ferramenta como Bizagi, Draw.io ou Lucidchart e anexado ao trabalho.  
+Fluxo sugerido:
+
+Início → Pré-matrícula → Cadastro em planilha → Definição de turma/professor → Aulas → Registro de presença → Controle financeiro → Relatórios → Fim
+
+#### Sistemas de Informação Existentes
+
+Atualmente, a escola não utiliza um ERP ou sistema educacional próprio, baseando-se em ferramentas dispersas:
+
+Google Sheets para controle de matrículas e pagamentos;
+
+WhatsApp para comunicação com alunos;
+
+Redes sociais (Instagram, Facebook) para divulgação.
+
+#### Principais Falhas e Dificuldades
+
+Processos manuais, sujeitos a erros e perda de informações;
+
+Falta de relatórios integrados de desempenho financeiro e pedagógico;
+
+Ausência de integração entre matrícula, agendamento, presença e finanças.
+
+#### Oportunidades de Melhoria
+
+Implementação de um sistema de gestão escolar musical, integrando cadastro de alunos, controle de pagamentos, agenda de aulas e relatórios de desempenho;
+
+Criação de dashboards com indicadores de evasão, inadimplência e ocupação de turmas;
+
+Automação da comunicação (envio de lembretes de aula e boletos).
