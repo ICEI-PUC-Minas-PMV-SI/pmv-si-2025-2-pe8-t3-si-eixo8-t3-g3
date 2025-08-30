@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Document } from 'src/entities/document.entity';
+// import { Document } from 'src/entities/document.entity';
 import { Repository } from 'typeorm';
 import { CreateDocumentDto } from './dtos/create-document.dto';
 import { UpdateDocumentDto } from './dtos/update-document.dto';
@@ -16,88 +16,88 @@ export class DocumentsService {
     private readonly configService: ConfigService
   ) {}
 
-  async findAll() {
-    const bucket = this.configService.get('MINIO_BUCKET');
-    const documents = await this.repo.find({
-      relations: ['user'],
-      order: { createdAt: 'DESC' },
-    });
+  // async findAll() {
+  //   const bucket = this.configService.get('MINIO_BUCKET');
+  //   const documents = await this.repo.find({
+  //     relations: ['user'],
+  //     order: { createdAt: 'DESC' },
+  //   });
 
-    const documentsWithLinks = await Promise.all(documents.map(async document => {
-      const link = await this.minioService.getFileUrl(document.link, bucket)
-      return { ...document, link };
-    }));
+  //   const documentsWithLinks = await Promise.all(documents.map(async document => {
+  //     const link = await this.minioService.getFileUrl(document.link, bucket)
+  //     return { ...document, link };
+  //   }));
 
-    return documentsWithLinks;
-  }
+  //   return documentsWithLinks;
+  // }
 
-  async create(body: CreateDocumentDto, file: Express.Multer.File, user: User) {
-    const { fileName, url } = await this.uploadDocument(file);
-    let document = this.repo.create({ ...body, link: fileName, user });
+  // async create(body: CreateDocumentDto, file: Express.Multer.File, user: User) {
+  //   const { fileName, url } = await this.uploadDocument(file);
+  //   let document = this.repo.create({ ...body, link: fileName, user });
 
-    document = await this.repo.save(document);
-    document.link = url
+  //   document = await this.repo.save(document);
+  //   document.link = url
 
-    return document;
-  }
+  //   return document;
+  // }
 
-  private async uploadDocument(file: Express.Multer.File): Promise<{ fileName: string; url: string }> {
-    if (!file) {
-      throw new BadRequestException('File not provided');
-    }
+  // private async uploadDocument(file: Express.Multer.File): Promise<{ fileName: string; url: string }> {
+  //   if (!file) {
+  //     throw new BadRequestException('File not provided');
+  //   }
 
-    const bucketName = this.configService.get('MINIO_BUCKET');
-    const fileName = `${Date.now()}_${file.originalname}`;
+  //   const bucketName = this.configService.get('MINIO_BUCKET');
+  //   const fileName = `${Date.now()}_${file.originalname}`;
 
-    const url = await this.minioService.upload(file, bucketName, fileName);
+  //   const url = await this.minioService.upload(file, bucketName, fileName);
     
-    return { fileName, url };
-  }
+  //   return { fileName, url };
+  // }
 
-  async findOne(id: number) {
-    const document = await this.repo.findOne({
-      where: { id },
-      relations: ['user']
-    });
+  // async findOne(id: number) {
+  //   const document = await this.repo.findOne({
+  //     where: { id },
+  //     relations: ['user']
+  //   });
   
-    if (!document) {
-      throw new NotFoundException('Document not found');
-    }
+  //   if (!document) {
+  //     throw new NotFoundException('Document not found');
+  //   }
 
-    const bucketName = this.configService.get('MINIO_BUCKET');
-    document.link = await this.minioService.getFileUrl(document.link, bucketName);
+  //   const bucketName = this.configService.get('MINIO_BUCKET');
+  //   document.link = await this.minioService.getFileUrl(document.link, bucketName);
 
-    return document;
-  }
+  //   return document;
+  // }
 
-  async update(id: number, body: UpdateDocumentDto, file: Express.Multer.File, user: User) {
-    const document = await this.findOne(id);
-    if (!document) {
-      throw new NotFoundException('Document not found');
-    }
+  // async update(id: number, body: UpdateDocumentDto, file: Express.Multer.File, user: User) {
+  //   const document = await this.findOne(id);
+  //   if (!document) {
+  //     throw new NotFoundException('Document not found');
+  //   }
 
-    let documentUrl: string = document.link;
-    let documentEdited = {...body, link: documentUrl};
+  //   let documentUrl: string = document.link;
+  //   let documentEdited = {...body, link: documentUrl};
 
-    if (file) {
-      const { fileName, url } = await this.uploadDocument(file);
-      documentUrl = url;
-      documentEdited.link = fileName;
-    }
+  //   if (file) {
+  //     const { fileName, url } = await this.uploadDocument(file);
+  //     documentUrl = url;
+  //     documentEdited.link = fileName;
+  //   }
 
-    Object.assign(document, documentEdited);
-    const documentSaved = await this.repo.save(document);
+  //   Object.assign(document, documentEdited);
+  //   const documentSaved = await this.repo.save(document);
 
-    documentSaved.link = documentUrl;
+  //   documentSaved.link = documentUrl;
 
-    return documentSaved;
-  }
+  //   return documentSaved;
+  // }
 
-  async remove(id: number) {
-    const document = await this.findOne(id);
-    if (!document) {
-      throw new NotFoundException('Document not found');
-    }
-    return this.repo.remove(document);
-  }
+  // async remove(id: number) {
+  //   const document = await this.findOne(id);
+  //   if (!document) {
+  //     throw new NotFoundException('Document not found');
+  //   }
+  //   return this.repo.remove(document);
+  // }
 }

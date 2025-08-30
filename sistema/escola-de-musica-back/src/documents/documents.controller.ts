@@ -14,48 +14,48 @@ import { Serialize } from 'src/interceptors/serialize.interceptor';
 export class DocumentsController {
   constructor(private readonly documentsService: DocumentsService) {}
 
-  @Get()
-  @UseGuards(JwtSessionGuard)
-  findAll() {
-    return this.documentsService.findAll();
-  }
+  // @Get()
+  // @UseGuards(JwtSessionGuard)
+  // findAll() {
+  //   return this.documentsService.findAll();
+  // }
 
-  @Post()
-  @UseGuards(JwtSessionGuard)
-  @UseInterceptors(FileInterceptor('file'))
-  async create(
-    @UploadedFile() file: Express.Multer.File,
-    @Body() body: CreateDocumentDto,
-    @Req() req: Request
-  ) {
-    const currentUser = req.user as User;
+  // @Post()
+  // @UseGuards(JwtSessionGuard)
+  // @UseInterceptors(FileInterceptor('file'))
+  // async create(
+  //   @UploadedFile() file: Express.Multer.File,
+  //   @Body() body: CreateDocumentDto,
+  //   @Req() req: Request
+  // ) {
+  //   const currentUser = req.user as User;
 
-    return this.documentsService.create(body, file, currentUser);
-  }
+  //   return this.documentsService.create(body, file, currentUser);
+  // }
 
-  @Get(':id')
-  @UseGuards(JwtSessionGuard)
-  findOne(@Param('id') id: string) {
-    return this.documentsService.findOne(+id);
-  }
+  // @Get(':id')
+  // @UseGuards(JwtSessionGuard)
+  // findOne(@Param('id') id: string) {
+  //   return this.documentsService.findOne(+id);
+  // }
 
-  @Put(':id')
-  @UseGuards(JwtSessionGuard)
-  @UseInterceptors(FileInterceptor('file'))
-  update(
-    @Param('id') id: string,
-    @UploadedFile() file: Express.Multer.File,
-    @Body() body: UpdateDocumentDto,
-    @Req() req: Request
-  ) {
-    const currentUser = req.user as User;
+  // @Put(':id')
+  // @UseGuards(JwtSessionGuard)
+  // @UseInterceptors(FileInterceptor('file'))
+  // update(
+  //   @Param('id') id: string,
+  //   @UploadedFile() file: Express.Multer.File,
+  //   @Body() body: UpdateDocumentDto,
+  //   @Req() req: Request
+  // ) {
+  //   const currentUser = req.user as User;
 
-    return this.documentsService.update(+id, body, file, currentUser);
-  }
+  //   return this.documentsService.update(+id, body, file, currentUser);
+  // }
 
-  @Delete(':id')
-  @UseGuards(JwtSessionGuard)
-  remove(@Param('id') id: string) {
-    return this.documentsService.remove(+id);
-  }
+  // @Delete(':id')
+  // @UseGuards(JwtSessionGuard)
+  // remove(@Param('id') id: string) {
+  //   return this.documentsService.remove(+id);
+  // }
 }
