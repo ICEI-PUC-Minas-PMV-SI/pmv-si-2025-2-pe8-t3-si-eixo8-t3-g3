@@ -25,8 +25,8 @@ const user = ref<User>({
 async function signup() {
   try {
     const { data }: { data: SignupResponse } = await axios.post('/auth/signup', user.value);
-    localStorage.setItem('zeus_accessToken', data.accessToken);
-    localStorage.setItem('zeus_user', JSON.stringify(data.user));
+    localStorage.setItem('escola-de-musica_accessToken', data.accessToken);
+    localStorage.setItem('escola-de-musica_user', JSON.stringify(data.user));
     useUserStore().setIsAutenticated(true)
     useUserStore().setUser(data.user)
     router.push('/feed-de-noticias')

@@ -4,7 +4,7 @@
 
 <template>
   <div class="d-block d-md-flex justify-space-between ga-16 custom-margin">
-    <span class="align-content-end">&copy; 2024 Zeus. Todos os direitos reservados</span>
+    <span class="align-content-end">&copy; 2025 Escola de Música. Todos os direitos reservados</span>
   </div>
 </template>
 

@@ -37,7 +37,7 @@ async function save() {
   try {
     loading.value = true
     const { data }: { data: UserUpdateResponse } = await axios.put(`/user/${user.value?.id}`, userProfileForm.value);
-    localStorage.setItem('zeus_user', JSON.stringify(data));
+    localStorage.setItem('escola-de-musica_user', JSON.stringify(data));
     useUserStore().setUser(data)
     useToastStore().showToast({
       message: 'Usuário atualizado com sucesso',

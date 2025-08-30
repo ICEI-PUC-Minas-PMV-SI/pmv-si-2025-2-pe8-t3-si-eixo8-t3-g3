@@ -1,7 +1,7 @@
 version: '3'
 services:
-  zeus-vue-app:
-    container_name: zeus-vue-app
+  escola-de-musica-vue-app:
+    container_name: escola-de-musica-vue-app
     build:
       context: .
       dockerfile: Dockerfile
@@ -11,8 +11,8 @@ services:
       - .:/app  # Monta o diretório atual no container
       - /app/node_modules  # Evita conflitos de dependências
     networks:
-      - zeus-network
+      - escola-de-musica-network
 
 networks:
-  zeus-network:
+  escola-de-musica-network:
     external: true

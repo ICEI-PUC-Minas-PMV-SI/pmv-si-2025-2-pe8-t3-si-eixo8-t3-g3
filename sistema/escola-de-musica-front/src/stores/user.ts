@@ -4,20 +4,20 @@ import { defineStore } from 'pinia'
 
 export const useUserStore = defineStore('user', {
   state: (): UserState => ({
-    user: (JSON.parse(localStorage.getItem('zeus_user') || 'null') as UserDto | null),
-    isAuthenticated: !!localStorage.getItem('zeus_accessToken')
+    user: (JSON.parse(localStorage.getItem('escola-de-musica_user') || 'null') as UserDto | null),
+    isAuthenticated: !!localStorage.getItem('escola-de-musica_accessToken')
   }),
   actions: {
     setIsAutenticated(value: boolean) {
       this.isAuthenticated = value
       if (!value) {
-        localStorage.removeItem('zeus_accessToken');
-        localStorage.removeItem('zeus_user');
+        localStorage.removeItem('escola-de-musica_accessToken');
+        localStorage.removeItem('escola-de-musica_user');
       }
     },
     setUser(value: UserDto) {
       this.user = value
-      localStorage.setItem('zeus_user', JSON.stringify(value))
+      localStorage.setItem('escola-de-musica_user', JSON.stringify(value))
     }
   }
 })

@@ -9,7 +9,7 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('zeus_accessToken');
+    const token = localStorage.getItem('escola-de-musica_accessToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
