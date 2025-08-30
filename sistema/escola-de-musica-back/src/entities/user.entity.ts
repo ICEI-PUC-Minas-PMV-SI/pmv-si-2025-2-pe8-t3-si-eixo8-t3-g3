@@ -1,15 +1,11 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { Exclude } from 'class-transformer';
-import { Apartment } from './apartment.entity';
-import { Document } from './document.entity';
-import { Visit } from './visit.entity';
-import { Feed } from './feed.entity';
 
 export enum UserRole {
   ADMIN = 'ADMIN',
-  SINDICO = 'SINDICO',
-  MORADOR = 'MORADOR',
-  PORTEIRO = 'PORTEIRO',
+  ASSISTENTE = 'ASSISTENTE',
+  PROFESSOR = 'PROFESSOR',
+  ALUNO = 'ALUNO',
 }
 
 export type UserRelations = 'apartment' | 'visitor';
@@ -38,23 +34,9 @@ export class User {
   @Column({
     type: 'enum',
     enum: UserRole,
-    default: UserRole.MORADOR,
+    default: UserRole.ALUNO,
   })
   role: UserRole;
-
-  @ManyToOne(() => Apartment, (apartment) => apartment.residents, {
-    nullable: true,
-  })
-  apartment: Apartment;
-
-  @OneToMany(() => Document, (document) => document.user)
-  documents: Document[];
-
-  @OneToMany(() => Visit, (visit) => visit.resident)
-  visits: Visit[];
-
-  @OneToMany(() => Feed, (feed) => feed.user)
-  feeds: Feed[];
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;

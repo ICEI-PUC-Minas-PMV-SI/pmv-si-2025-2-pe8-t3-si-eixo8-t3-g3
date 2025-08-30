@@ -5,14 +5,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
-import { ApartmentsModule } from './apartments/apartments.module';
-import { ResidentsModule } from './residents/residents.module';
 import { AuthModule } from './auth/auth.module';
-import { VisitorsModule } from './visitors/visitors.module';
-import { EmployeesModule } from './employees/employees.module';
-import { DocumentsModule } from './documents/documents.module';
-import { VisitsModule } from './visits/visits.module';
-import { FeedModule } from './feed/feed.module';
 const cookieSession = require('cookie-session');
 
 @Module({
@@ -35,14 +28,7 @@ const cookieSession = require('cookie-session');
       }),
     }),
     UsersModule,
-    AuthModule,
-    ResidentsModule,
-    ApartmentsModule,
-    VisitorsModule,
-    EmployeesModule,
-    DocumentsModule,
-    VisitsModule,
-    FeedModule
+    AuthModule
   ],
   controllers: [AppController],
   providers: [
