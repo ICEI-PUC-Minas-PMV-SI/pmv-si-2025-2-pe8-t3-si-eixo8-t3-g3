@@ -24,39 +24,49 @@ const router = createRouter({
       component: () => import('@/views/Site/CreateAccount.vue')
     },
     {
-      path: '/feed-de-noticias',
-      name: 'Feed de Notícias',
-      component: () => import('@/views/System/NewsFeed.vue')
+      path: '/dashboard',
+      name: 'Dashboard',
+      component: () => import('@/views/System/Dashboard.vue')
     },
     {
-      path: '/moradores',
-      name: 'Moradores',
-      component: () => import('@/views/System/Residents.vue')
+      path: '/students',
+      name: 'Students',
+      component: () => import('@/views/System/Students.vue')
     },
     {
-      path: '/documentos',
-      name: 'Documentos',
-      component: () => import('@/views/System/Documents.vue')
+      path: '/teachers',
+      name: 'Teachers',
+      component: () => import('@/views/System/Teachers.vue')
     },
     {
-      path: '/visitantes',
-      name: 'Visitantes',
-      component: () => import('@/views/System/Visitors.vue')
+      path: '/music-classes',
+      name: 'Music Classes',
+      component: () => import('@/views/System/MusicClasses.vue')
     },
     {
-      path: '/visitas',
-      name: 'Visitas',
-      component: () => import('@/views/System/Visits.vue')
+      path: '/instruments',
+      name: 'Instruments',
+      component: () => import('@/views/System/Instruments.vue')
     },
     {
-      path: '/funcionarios',
-      name: 'Funcionários',
-      component: () => import('@/views/System/Employees.vue')
+      path: '/registrations',
+      name: 'Registrations',
+      component: () => import('@/views/System/Registrations.vue')
     },
     {
-      path: '/apartamentos',
-      name: 'Apartamentos',
-      component: () => import('@/views/System/Apartments.vue')
+      path: '/payments',
+      name: 'Payments',
+      component: () => import('@/views/System/Payments.vue')
+    },
+    {
+      path: '/attendances',
+      name: 'Attendances',
+      component: () => import('@/views/System/Attendances.vue')
+    },
+    {
+      path: '/performance-reports',
+      name: 'Performance Reports',
+      component: () => import('@/views/System/PerformanceReports.vue')
     }
   ]
 })

@@ -1,60 +1,73 @@
 <script setup lang="ts">
-
+import { VList, VListItem, VDivider } from 'vuetify/components';
 </script>
 
 <template>
-  <v-list
-    density="compact"
-    nav
-  >
+  <v-list density="compact" nav>
     <v-list-item
       link
-      prepend-icon="mdi-newspaper"
-      title="Feed de Notícias"
-      value="feed-de-noticias"
-      to="feed-de-noticias"
+      prepend-icon="mdi-view-dashboard"
+      title="Dashboard"
+      value="dashboard"
+      to="/dashboard"
+    />
+    <v-divider />
+    <v-list-item
+      link
+      prepend-icon="mdi-account-group"
+      title="Alunos"
+      value="students"
+      to="/students"
     />
     <v-list-item
       link
-      prepend-icon="mdi-home-group"
-      title="Moradores"
-      value="moradores"
-      to="moradores"
+      prepend-icon="mdi-teach"
+      title="Professores"
+      value="teachers"
+      to="/teachers"
     />
     <v-list-item
       link
-      prepend-icon="mdi-file-document-multiple"
-      title="Documentos"
-      value="documentos"
-      to="documentos"
+      prepend-icon="mdi-calendar-month"
+      title="Aulas"
+      value="music-classes"
+      to="/music-classes"
     />
     <v-list-item
       link
-      prepend-icon="mdi-camera-front-variant"
-      title="Visitantes"
-      value="visitantes"
-      to="visitantes"
+      prepend-icon="mdi-guitar-acoustic"
+      title="Instrumentos"
+      value="instruments"
+      to="/instruments"
+    />
+    <v-divider />
+    <v-list-item
+      link
+      prepend-icon="mdi-certificate"
+      title="Matrículas"
+      value="registrations"
+      to="/registrations"
     />
     <v-list-item
       link
-      prepend-icon="mdi-home-clock-outline"
-      title="Visitas"
-      value="visitas"
-      to="visitas"
+      prepend-icon="mdi-cash-multiple"
+      title="Financeiro"
+      value="payments"
+      to="/payments"
     />
     <v-list-item
       link
-      prepend-icon="mdi-account-hard-hat"
-      title="Funcionários"
-      value="funcionarios"
-      to="funcionarios"
+      prepend-icon="mdi-clipboard-list"
+      title="Presença"
+      value="attendances"
+      to="/attendances"
     />
     <v-list-item
       link
-      prepend-icon="mdi-office-building"
-      title="Apartamentos"
-      value="apartamentos"
-      to="apartamentos"
+      prepend-icon="mdi-chart-line"
+      title="Desempenho"
+      value="performance-reports"
+      to="/performance-reports"
     />
   </v-list>
 </template>
