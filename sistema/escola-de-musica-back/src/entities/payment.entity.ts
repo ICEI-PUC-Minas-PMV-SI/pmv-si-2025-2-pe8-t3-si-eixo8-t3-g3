@@ -2,6 +2,12 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, Up
 import { Student } from './student.entity';
 import { Registration } from './registration.entity';
 
+export enum PaymentStatus {
+  PENDING = 'PENDING',
+  PAID = 'PAID',
+  CANCELED = 'CANCELED'
+}
+
 @Entity()
 export class Payment {
   @PrimaryGeneratedColumn()
@@ -13,7 +19,7 @@ export class Payment {
   @Column()
   paymentDate: Date;
 
-  @Column({ type: 'enum', enum: ['PENDING', 'PAID'], default: 'PENDING' })
+  @Column({ type: 'enum', enum: ['PENDING', 'PAID', 'CANCELED'], default: 'PENDING' })
   status: string;
 
   @ManyToOne(() => Student, student => student.payments)

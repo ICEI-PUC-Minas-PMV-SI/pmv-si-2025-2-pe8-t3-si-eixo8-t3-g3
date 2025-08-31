@@ -8,8 +8,6 @@ export enum UserRole {
   ALUNO = 'ALUNO',
 }
 
-export type UserRelations = 'apartment' | 'visitor';
-
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
