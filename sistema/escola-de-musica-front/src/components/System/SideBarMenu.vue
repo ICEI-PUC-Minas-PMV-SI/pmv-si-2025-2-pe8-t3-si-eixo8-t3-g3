@@ -21,7 +21,7 @@ import { VList, VListItem, VDivider } from 'vuetify/components';
     />
     <v-list-item
       link
-      prepend-icon="mdi-teach"
+      prepend-icon="mdi-human-male-board"
       title="Professores"
       value="teachers"
       to="/teachers"
