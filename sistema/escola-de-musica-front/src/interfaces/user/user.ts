@@ -1,5 +1,5 @@
 export default interface User {
-  role: 'MORADOR' | 'SINDICO' | 'PORTEIRO';
+  role: 'ADMIN' | 'ASSISTENTE' | 'PROFESSOR' | 'ALUNO';
   email: string | null;
   password: string | null;
 }

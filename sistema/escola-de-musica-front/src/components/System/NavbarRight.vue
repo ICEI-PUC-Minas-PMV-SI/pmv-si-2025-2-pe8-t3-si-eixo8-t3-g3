@@ -43,11 +43,11 @@ function logout() {
     {{ user.name ?? 'Sem Nome' }} <br>
     <small>{{ user.email }}</small>
   </div>
-  <v-btn @click="changeMode">
+  <!-- <v-btn @click="changeMode">
     <v-icon v-if="theme === 'dark'" icon="mdi-weather-sunny" size="large"/>
     <v-icon v-if="theme === 'light'" icon="mdi-weather-night" size="large"/>
-  </v-btn>
-  <div class="d-flex ga-3 mr-4">
+  </v-btn> -->
+  <div class="d-flex ga-3 mx-4">
     <v-btn
       :class="appLoginColor,hoverBtnColor"
       :style="{ textTransform: 'none' }"
