@@ -1,1 +1,0 @@
-export type VisitStatus = 'APPROVED' | 'DISAPPROVED' | 'PENDING';
