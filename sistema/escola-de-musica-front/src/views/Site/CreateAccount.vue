@@ -1,37 +1,54 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useUserStore } from '@/stores/user'
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/user';
+import { useToastStore } from '@/stores/toast';
 import type User from '@/interfaces/user/user';
 import axios from '@/services/axiosInstace';
 import type SignupResponse from '@/interfaces/auth/signup';
 
 const router = useRouter();
+const userStore = useUserStore();
+const toastStore = useToastStore();
 
-const visible = ref(false)
+const visible = ref(false);
+const isLoading = ref(false);
 
 const options = ref([
-  {title: 'MORADOR', value: 'MORADOR'},
-  {title: 'SÍNDICO', value: 'SINDICO'},
-  {title: 'FUNCIONÁRIO', value: 'PORTEIRO'}
+  { title: 'ALUNO', value: 'ALUNO' },
+  { title: 'PROFESSOR', value: 'PROFESSOR' },
+  { title: 'ASSISTENTE', value: 'ASSISTENTE' },
+  { title: 'ADMINISTRADOR', value: 'ADMIN' },
 ]);
 
 const user = ref<User>({
-  role: 'MORADOR',
+  role: 'ALUNO',
   email: null,
-  password: null
+  password: null,
 });
 
 async function signup() {
+  isLoading.value = true;
   try {
     const { data }: { data: SignupResponse } = await axios.post('/auth/signup', user.value);
+    
     localStorage.setItem('escola-de-musica_accessToken', data.accessToken);
     localStorage.setItem('escola-de-musica_user', JSON.stringify(data.user));
-    useUserStore().setIsAutenticated(true)
-    useUserStore().setUser(data.user)
-    router.push('/feed-de-noticias')
-  } catch (err) {
-    console.error('Erro ao fazer cadastro', err);
+
+    userStore.setIsAutenticated(true);
+    userStore.setUser(data.user);
+
+    toastStore.showToast({message: 'Conta criada com sucesso!', type: 'success', color: 'green'});
+    router.push('/dashboard');
+  } catch (err: any) {
+    if (err.response && err.response.data && err.response.data.message) {
+      toastStore.showToast({message: err.response.data.message, type: 'error', color: 'red'});
+    } else {
+      toastStore.showToast({message: 'Erro ao criar conta. Tente novamente.', type: 'error', color: 'red'});
+    }
+    console.error('Erro ao fazer cadastro:', err);
+  } finally {
+    isLoading.value = false;
   }
 }
 </script>
@@ -45,7 +62,7 @@ async function signup() {
       min-width="376"
       rounded="lg"
     >
-      <div class="text-subtitle-1 text-medium-emphasis">Tipo de usuário</div>
+      <div class="text-subtitle-1 text-medium-emphasis">Tipo de conta</div>
 
       <v-select
         v-model="user.role"
@@ -85,9 +102,10 @@ async function signup() {
         size="large"
         variant="tonal"
         block
+        :loading="isLoading"
         @click="signup"
       >
-        Cadastrar-se
+        Cadastrar
       </v-btn>
 
       <v-card-text class="text-center">
@@ -96,9 +114,10 @@ async function signup() {
           <v-btn
             class="text-blue text-decoration-none"
             variant="text"
+            to="/login"
           >
-            <v-icon icon="mdi-chevron-left"></v-icon> Sign In
-        </v-btn>
+            <v-icon icon="mdi-chevron-left"></v-icon> Entrar
+          </v-btn>
         </div>
       </v-card-text>
     </v-card>
