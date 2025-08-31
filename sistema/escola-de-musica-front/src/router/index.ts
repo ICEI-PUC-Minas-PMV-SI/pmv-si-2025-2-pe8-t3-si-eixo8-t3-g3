@@ -23,11 +23,11 @@ const router = createRouter({
       name: 'signup',
       component: () => import('@/views/Site/CreateAccount.vue')
     },
-    // {
-    //   path: '/dashboard',
-    //   name: 'Dashboard',
-    //   component: () => import('@/views/System/Dashboard.vue')
-    // },
+    {
+      path: '/dashboard',
+      name: 'Dashboard',
+      component: () => import('../views/System/Dashboard.vue')
+    },
     // {
     //   path: '/students',
     //   name: 'Students',
