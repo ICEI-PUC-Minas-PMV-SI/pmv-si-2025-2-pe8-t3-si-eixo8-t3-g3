@@ -6,6 +6,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { RegistrationModule } from './registration/registration.module';
+import { StudentModule } from './student/student.module';
+import { TeacherModule } from './teacher/teacher.module';
+import { InstrumentModule } from './instrument/instrument.module';
+import { MusicClassModule } from './music-class/music-class.module';
+import { AttendanceModule } from './attendance/attendance.module';
+import { PaymentModule } from './payment/payment.module';
+import { PerformanceReportModule } from './performance-report/performance-report.module';
 const cookieSession = require('cookie-session');
 
 @Module({
@@ -28,7 +36,15 @@ const cookieSession = require('cookie-session');
       }),
     }),
     UsersModule,
-    AuthModule
+    AuthModule,
+    RegistrationModule,
+    StudentModule,
+    TeacherModule,
+    InstrumentModule,
+    MusicClassModule,
+    AttendanceModule,
+    PaymentModule,
+    PerformanceReportModule
   ],
   controllers: [AppController],
   providers: [
