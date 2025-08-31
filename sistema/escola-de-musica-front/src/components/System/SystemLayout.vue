@@ -20,7 +20,7 @@ const appBarColor = computed(() => {
           :width="200"
           aspect-ratio="16/9"
           cover
-          src="/src/assets/logo-dark.png"
+          src="/src/assets/logo-horizontal.png"
         ></v-img>
       </template>
       <template v-slot:append>

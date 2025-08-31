@@ -23,10 +23,10 @@ function changeMode() {
 
 <template>
   <div class="d-flex ga-3 mr-4">
-    <v-btn @click="changeMode" variant="text" :class="hoverBtnColor">
+    <!-- <v-btn @click="changeMode" variant="text" :class="hoverBtnColor">
       <v-icon v-if="theme === 'dark'" icon="mdi-weather-sunny" size="large"/>
       <v-icon v-if="theme === 'light'" icon="mdi-weather-night" size="large"/>
-    </v-btn>
+    </v-btn> -->
     <v-btn to="/" :style="{ textTransform: 'none' }" :class="hoverBtnColor">
       Home
     </v-btn>
