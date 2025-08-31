@@ -1,5 +1,5 @@
 export default interface UserProfileForm {
-  role: 'MORADOR' | 'SINDICO' | 'PORTEIRO',
+  role: 'ADMIN' | 'ASSISTENTE' | 'PROFESSOR' | 'ALUNO',
   name: string | null,
   email: string | null,
   cellphone: string | null,

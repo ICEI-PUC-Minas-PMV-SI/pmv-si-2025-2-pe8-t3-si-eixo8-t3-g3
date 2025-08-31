@@ -1,7 +1,7 @@
 export default interface UserDto {
   id: number,
   email: string,
-  role: 'MORADOR' | 'SINDICO' | 'PORTEIRO' | 'ADMIN',
+  role: 'ADMIN' | 'ASSISTENTE' | 'PROFESSOR' | 'ALUNO',
   name: string,
   cellphone: string | null,
   cpf: string | null,

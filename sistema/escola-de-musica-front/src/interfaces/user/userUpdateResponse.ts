@@ -4,7 +4,7 @@ export default interface UserUpdateResponse {
   email: string,
   cellphone: string | null,
   cpf: string | null,
-  role: 'MORADOR' | 'SINDICO' | 'PORTEIRO' | 'ADMIN',
+  role: 'ADMIN' | 'ASSISTENTE' | 'PROFESSOR' | 'ALUNO',
   createdAt: Date,
   updatedAt: Date
 }
