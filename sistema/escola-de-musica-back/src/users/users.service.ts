@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User, UserRole, type UserRelations } from '../entities/user.entity';
+import { User, UserRole } from '../entities/user.entity';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { promisify } from 'util';
 import { UpdateUserDto } from './dtos/update-user.dto';
@@ -18,7 +18,7 @@ export class UsersService {
     return this.repo.save(user);
   }
 
-  async findOne(id: number, relations?: UserRelations[]) {
+  async findOne(id: number, relations?: []) {
     let user: User;
 
     if (relations && relations.length > 0) {
