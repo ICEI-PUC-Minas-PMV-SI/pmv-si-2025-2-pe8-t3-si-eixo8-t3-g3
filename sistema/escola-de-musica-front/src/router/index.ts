@@ -26,23 +26,23 @@ const router = createRouter({
     {
       path: '/dashboard',
       name: 'Dashboard',
-      component: () => import('../views/System/Dashboard.vue')
+      component: () => import('@/views/System/Dashboard.vue')
     },
     // {
     //   path: '/students',
     //   name: 'Students',
-    //   component: () => import('@/views/System/Students.vue')
+    //   component: () => import('@/views/System/Student.vue')
     // },
     // {
     //   path: '/teachers',
     //   name: 'Teachers',
     //   component: () => import('@/views/System/Teachers.vue')
     // },
-    // {
-    //   path: '/music-classes',
-    //   name: 'Music Classes',
-    //   component: () => import('@/views/System/MusicClasses.vue')
-    // },
+    {
+      path: '/music-classes',
+      name: 'Music Classes',
+      component: () => import('@/views/System/MusicClasses.vue')
+    },
     // {
     //   path: '/instruments',
     //   name: 'Instruments',
@@ -56,7 +56,7 @@ const router = createRouter({
     // {
     //   path: '/payments',
     //   name: 'Payments',
-    //   component: () => import('@/views/System/Payments.vue')
+    //   component: () => import('@/views/System/Payment.vue')
     // },
     // {
     //   path: '/attendances',
