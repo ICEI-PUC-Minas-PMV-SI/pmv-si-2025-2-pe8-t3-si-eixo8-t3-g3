@@ -28,11 +28,11 @@ const router = createRouter({
       name: 'Dashboard',
       component: () => import('@/views/System/Dashboard.vue')
     },
-    // {
-    //   path: '/students',
-    //   name: 'Students',
-    //   component: () => import('@/views/System/Student.vue')
-    // },
+    {
+      path: '/students',
+      name: 'Students',
+      component: () => import('@/views/System/Student.vue')
+    },
     // {
     //   path: '/teachers',
     //   name: 'Teachers',
