@@ -33,21 +33,21 @@ const router = createRouter({
       name: 'Students',
       component: () => import('@/views/System/Student.vue')
     },
-    // {
-    //   path: '/teachers',
-    //   name: 'Teachers',
-    //   component: () => import('@/views/System/Teachers.vue')
-    // },
+    {
+      path: '/teachers',
+      name: 'Teachers',
+      component: () => import('@/views/System/Teachers.vue')
+    },
     {
       path: '/music-classes',
       name: 'Music Classes',
       component: () => import('@/views/System/MusicClasses.vue')
     },
-    // {
-    //   path: '/instruments',
-    //   name: 'Instruments',
-    //   component: () => import('@/views/System/Instruments.vue')
-    // },
+    {
+      path: '/instruments',
+      name: 'Instruments',
+      component: () => import('@/views/System/Instruments.vue')
+    },
     // {
     //   path: '/registrations',
     //   name: 'Registrations',
