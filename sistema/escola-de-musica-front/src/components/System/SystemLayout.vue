@@ -17,7 +17,7 @@ const appBarColor = computed(() => {
       <template v-slot:prepend>
         <v-img
           class="ml-3"
-          :width="200"
+          :width="150"
           aspect-ratio="16/9"
           cover
           src="/src/assets/logo-horizontal.png"

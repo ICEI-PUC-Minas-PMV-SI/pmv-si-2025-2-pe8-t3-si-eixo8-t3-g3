@@ -1,14 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Put,
-  Delete,
-  Param,
-  Query,
-  NotFoundException,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Put, Delete, Param, Query, NotFoundException, UseGuards } from '@nestjs/common';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UsersService } from './users.service';
 import { Serialize } from '../interceptors/serialize.interceptor';
