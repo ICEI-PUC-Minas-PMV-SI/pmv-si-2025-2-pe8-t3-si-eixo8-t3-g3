@@ -130,9 +130,9 @@ getStudents();
     <template v-slot:item.user.cellphone="{ item }">
       {{ item.user.cellphone }}
     </template>
-    <template v-slot:item.registration.status="{ item }">
-      <v-chip :color="item.registration?.status === 'ACTIVE' ? 'green' : 'red'">
-        {{ item.registration?.status === 'ACTIVE' ? 'Ativo' : 'Inativo' }}
+    <template v-slot:item.isEnrolled="{ item }">
+      <v-chip :color="item.isEnrolled === true ? 'green' : 'red'">
+        {{ item.isEnrolled === true ? 'Ativo' : 'Inativo' }}
       </v-chip>
     </template>
     <template v-slot:item.actions="{ item }">
