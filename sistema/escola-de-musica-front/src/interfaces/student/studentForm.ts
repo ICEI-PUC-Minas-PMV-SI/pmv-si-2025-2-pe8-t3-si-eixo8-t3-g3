@@ -7,5 +7,6 @@ export default interface StudentForm {
   password?: string | null;
   cellphone: string | null;
   cpf: string | null;
+  isEnrolled: boolean;
   registration: RegistrationForm;
 }

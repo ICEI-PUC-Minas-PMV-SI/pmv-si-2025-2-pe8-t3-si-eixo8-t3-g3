@@ -12,9 +12,9 @@ const { students } = storeToRefs(useStudentStore());
 const headers = ref([
   { title: 'Nome', key: 'user.name', align: 'start' as const },
   { title: 'E-mail', key: 'user.email', align: 'start' as const },
-  { title: 'CPF', key: 'cpf', align: 'start' as const },
-  { title: 'Telefone', key: 'cellphone', align: 'start' as const },
-  { title: 'Matrícula', key: 'registration.status', align: 'start' as const },
+  { title: 'CPF', key: 'user.name.cpf', align: 'start' as const },
+  { title: 'Telefone', key: 'user.name.cellphone', align: 'start' as const },
+  { title: 'Matrícula', key: 'isEnrolled', align: 'start' as const },
   { title: 'Ações', key: 'actions', sortable: false, align: 'end' as const },
 ]);
 
@@ -124,11 +124,11 @@ getStudents();
     <template v-slot:item.user.email="{ item }">
       {{ item.user.email }}
     </template>
-    <template v-slot:item.cpf="{ value }">
-      {{ value }}
+    <template v-slot:item.user.cpf="{ item }">
+      {{ item.user }}
     </template>
-    <template v-slot:item.cellphone="{ value }">
-      {{ value }}
+    <template v-slot:item.user.cellphone="{ item }">
+      {{ item.user.cellphone }}
     </template>
     <template v-slot:item.registration.status="{ item }">
       <v-chip :color="item.registration?.status === 'ACTIVE' ? 'green' : 'red'">

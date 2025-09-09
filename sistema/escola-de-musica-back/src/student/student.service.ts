@@ -27,10 +27,10 @@ export class StudentService {
     }
 
     const newUser = this.userRepository.create({ ...createStudentDto, role: UserRole.ALUNO });
-    this.userRepository.save(newUser);
+    const newUserSaved = await this.userRepository.save(newUser);
 
     const newStudent = this.studentRepository.create({
-      user: newUser,
+      user: newUserSaved,
       isEnrolled: false,
     });
 

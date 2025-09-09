@@ -6,5 +6,6 @@ export default interface StudentDto {
   cpf: string;
   cellphone: string;
   user: UserDto;
+  isEnrolled: boolean;
   registration: RegistrationDto;
 }

@@ -18,9 +18,11 @@ const student = ref<StudentForm>({
   password: null,
   cellphone: null,
   cpf: null,
+  isEnrolled: false,
   registration: {
-    instrumentId: null,
-    status: 'ACTIVE'
+    status: 'INACTIVE',
+    studentId: null,
+    musicClassId: null
   }
 });
 
@@ -36,7 +38,12 @@ watch(() => props.mode, (newMode) => {
         password: null,
         cellphone: storeStudent.cellphone ?? null,
         cpf: storeStudent.cpf ?? null,
-        registration: storeStudent.registration
+        isEnrolled: storeStudent.isEnrolled,
+        registration: {
+          status: 'INACTIVE',
+          studentId: null,
+          musicClassId: null
+        }
       };
     }
   }
