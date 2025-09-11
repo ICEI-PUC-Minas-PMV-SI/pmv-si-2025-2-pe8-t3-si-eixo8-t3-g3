@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
 import { StudentService } from './student.service';
 import { CreateStudentDto } from './dtos/create-student.dto';
 import { UpdateStudentDto } from './dtos/update-student.dto';
+import { JwtSessionGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('students')
 export class StudentController {
@@ -24,6 +25,7 @@ export class StudentController {
   }
 
   @Put(':id')
+  @UseGuards(JwtSessionGuard)
   update(@Param('id') id: string, @Body() updateStudentDto: UpdateStudentDto) {
     return this.studentService.update(+id, updateStudentDto);
   }

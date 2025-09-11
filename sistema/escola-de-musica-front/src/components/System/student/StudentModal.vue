@@ -50,6 +50,13 @@ const title = computed(() => {
 });
 
 function close() {
+  student.value = {
+    name: null,
+    email: null,
+    password: null,
+    cellphone: null,
+    cpf: null
+  };
   emit('close');
 }
 
@@ -162,14 +169,14 @@ async function save() {
           variant="text"
           @click="close"
         >
-          Cancel
+          Cancelar
         </v-btn>
         <v-btn
           color="blue-darken-1"
           variant="text"
           @click="save"
         >
-          Save
+          Salvar
         </v-btn>
       </v-card-actions>
     </v-card>

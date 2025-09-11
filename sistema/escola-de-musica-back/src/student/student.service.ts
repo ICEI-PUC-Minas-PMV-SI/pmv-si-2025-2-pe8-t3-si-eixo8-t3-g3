@@ -54,13 +54,15 @@ export class StudentService {
   }
 
   async update(id: number, updateStudentDto: UpdateStudentDto): Promise<Student> {
-    const user = await this.userRepository.findOne({ where: { email: updateStudentDto.email } });
+    const student = await this.studentRepository.findOne({where: { id }, relations: ['user']});
 
-    if (user) {
-      throw new NotFoundException(`Usuário com e-mail ${updateStudentDto.email} já existe.`);
+    console.log('teste1', updateStudentDto.email, student.user.email)
+    if(student.user.email !== updateStudentDto.email) {
+      const userExistsWithSameEmail = await this.userRepository.findOne({ where: { email: updateStudentDto.email } });
+      if (userExistsWithSameEmail) {
+        throw new NotFoundException(`Usuário com e-mail ${updateStudentDto.email} já existe.`);
+      }
     }
-
-    const student = await this.findOne(id);
 
     if (updateStudentDto.password) {
       const salt = randomBytes(8).toString('hex');
@@ -70,10 +72,10 @@ export class StudentService {
       delete updateStudentDto.password
     }
 
-    Object.assign(user, updateStudentDto);
-    this.userRepository.save(user);
+    Object.assign(student.user, updateStudentDto);
+    this.userRepository.save(student.user);
 
-    this.studentRepository.merge(student, { user, isEnrolled: true });
+    this.studentRepository.merge(student, { user: student.user });
     return this.studentRepository.save(student);
   }
 

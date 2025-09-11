@@ -12,8 +12,8 @@ const { students } = storeToRefs(useStudentStore());
 const headers = ref([
   { title: 'Nome', key: 'user.name', align: 'start' as const },
   { title: 'E-mail', key: 'user.email', align: 'start' as const },
-  { title: 'CPF', key: 'user.name.cpf', align: 'start' as const },
-  { title: 'Telefone', key: 'user.name.cellphone', align: 'start' as const },
+  { title: 'CPF', key: 'user.cpf', align: 'start' as const },
+  { title: 'Telefone', key: 'user.cellphone', align: 'start' as const },
   { title: 'Matrícula', key: 'isEnrolled', align: 'start' as const },
   { title: 'Ações', key: 'actions', sortable: false, align: 'end' as const },
 ]);
@@ -125,7 +125,7 @@ getStudents();
       {{ item.user.email }}
     </template>
     <template v-slot:item.user.cpf="{ item }">
-      {{ item.user }}
+      {{ item.user.cpf }}
     </template>
     <template v-slot:item.user.cellphone="{ item }">
       {{ item.user.cellphone }}
