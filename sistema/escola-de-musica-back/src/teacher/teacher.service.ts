@@ -6,6 +6,10 @@ import { User, UserRole } from 'src/entities/user.entity';
 import { In, Repository } from 'typeorm';
 import { CreateTeacherDto } from './dtos/create-teacher.dto';
 import { UpdateTeacherDto } from './dtos/update-teacher.dto';
+import { randomBytes, scrypt as _scrypt } from 'crypto';
+import { promisify } from 'util';
+
+const scrypt = promisify(_scrypt);
 
 @Injectable()
 export class TeacherService {
@@ -26,7 +30,11 @@ export class TeacherService {
       throw new NotFoundException(`Usuário com e-mail ${createTeacherDto.email} já existe.`);
     }
 
-    const newUser = this.userRepository.create({ ...createTeacherDto, role: UserRole.PROFESSOR });
+    const salt = randomBytes(8).toString('hex');
+    const hash = (await scrypt(createTeacherDto.password, salt, 32)) as Buffer;
+    const result = salt + '.' + hash.toString('hex');
+
+    const newUser = this.userRepository.create({ ...createTeacherDto, password: result, role: UserRole.PROFESSOR });
     const newUserSaved = await this.userRepository.save(newUser);
 
     const newTeacher = this.teacherRepository.create({
@@ -82,8 +90,14 @@ export class TeacherService {
       if (updateTeacherDto.email !== undefined) {
         teacher.user.email = updateTeacherDto.email;
       }
-      if (updateTeacherDto.password !== undefined) {
-        teacher.user.password = updateTeacherDto.password;
+      if (updateTeacherDto.password) {
+        if (updateTeacherDto.password) {
+          const salt = randomBytes(8).toString('hex');
+          const hash = (await scrypt(updateTeacherDto.password, salt, 32)) as Buffer;
+          teacher.user.password = salt + '.' + hash.toString('hex');
+        } else {
+          delete teacher.user.password
+        }
       }
       await this.userRepository.save(teacher.user);
     }

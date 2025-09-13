@@ -26,7 +26,11 @@ export class StudentService {
       throw new NotFoundException(`Usuário com e-mail ${createStudentDto.email} já existe.`);
     }
 
-    const newUser = this.userRepository.create({ ...createStudentDto, role: UserRole.ALUNO });
+    const salt = randomBytes(8).toString('hex');
+    const hash = (await scrypt(createStudentDto.password, salt, 32)) as Buffer;
+    const result = salt + '.' + hash.toString('hex');
+
+    const newUser = this.userRepository.create({ ...createStudentDto, password: result, role: UserRole.ALUNO });
     const newUserSaved = await this.userRepository.save(newUser);
 
     const newStudent = this.studentRepository.create({

@@ -5,7 +5,6 @@ import { User, UserRole } from '../entities/user.entity';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { promisify } from 'util';
 import { UpdateUserDto } from './dtos/update-user.dto';
-import { CreateStudentDto } from 'src/student/dtos/create-student.dto';
 
 const scrypt = promisify(_scrypt);
 

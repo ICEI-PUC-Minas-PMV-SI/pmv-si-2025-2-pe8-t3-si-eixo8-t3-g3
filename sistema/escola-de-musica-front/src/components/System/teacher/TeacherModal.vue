@@ -28,6 +28,7 @@ const availableInstruments = ref<InstrumentDto[]>([]);
 watch(() => props.mode, (newMode) => {
   if (newMode === 'create') {
     teacher.value = {
+      id: null,
       name: null,
       email: null,
       password: null,
@@ -40,6 +41,7 @@ watch(() => props.mode, (newMode) => {
     const selectedTeacher = useTeacherStore().teacher;
     if (selectedTeacher) {
       teacher.value = { 
+        id: selectedTeacher.id,
         password: null,
         cellphone: selectedTeacher.user.cellphone,
         cpf: selectedTeacher.user.cpf,
@@ -101,7 +103,7 @@ async function save() {
 
     const { data }: { data: TeacherDto } = !id
       ? await axios.post('/teachers', teacherData)
-      : await axios.patch(`/teachers/${id}`, teacherData);
+      : await axios.put(`/teachers/${id}`, teacherData);
 
     const teacherStore = useTeacherStore();
     if (!id) teacherStore.addTeacher(data);
