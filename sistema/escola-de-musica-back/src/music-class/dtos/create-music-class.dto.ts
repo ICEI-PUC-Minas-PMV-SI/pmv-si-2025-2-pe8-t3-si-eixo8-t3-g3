@@ -1,12 +1,9 @@
 import { IsDateString, IsString, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 
 export class CreateMusicClassDto {
-  @IsDateString()
-  date: string;
-
   @IsString()
   @IsNotEmpty()
-  topic: string;
+  name: string;
 
   @IsNumber()
   teacherId: number;

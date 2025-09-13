@@ -40,7 +40,7 @@ function update(musicClass: MusicClassDto) {
 async function remove(musicClass: MusicClassDto) {
   try {
     loading.value = true;
-    await axios.delete(`/music-class/${musicClass.id}`);
+    await axios.delete(`/music-classes/${musicClass.id}`);
     useMusicClassStore().deleteMusicClass(musicClass);
     useToastStore().showToast({ message: 'Turma deletada com sucesso.', type: 'success', color: 'green' });
   } catch (err) {
@@ -59,7 +59,7 @@ function closeModal() {
 async function getMusicClasses() {
   try {
     loading.value = true;
-    const { data }: { data: MusicClassDto[] } = await axios.get('/music-class');
+    const { data }: { data: MusicClassDto[] } = await axios.get('/music-classes');
     useMusicClassStore().setMusicClasses(data);
   } catch (err) {
     console.error(err);

@@ -11,10 +11,7 @@ export class MusicClass {
   id: number;
 
   @Column()
-  date: Date;
-
-  @Column()
-  topic: string;
+  name: string;
 
   @ManyToOne(() => Teacher, teacher => teacher.musicClasses)
   teacher: Teacher;
