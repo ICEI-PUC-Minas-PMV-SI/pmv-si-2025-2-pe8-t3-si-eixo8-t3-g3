@@ -6,4 +6,5 @@ export default interface TeacherForm {
   cellphone: string | null;
   cpf: string | null;
   hireDate: string | null;
+  instrumentIds?: number[];
 }

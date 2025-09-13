@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, onMounted } from 'vue';
 import type TeacherForm from '@/interfaces/teacher/teacherForm';
 import type TeacherDto from '@/interfaces/teacher/teacherDto';
+import type InstrumentDto from '@/interfaces/instrument/instrumentDto';
 import axios from '@/services/axiosInstace';
 import { useTeacherStore } from '@/stores/teacher';
 import { useToastStore } from '@/stores/toast';
@@ -19,7 +20,10 @@ const teacher = ref<TeacherForm>({
   cellphone: null,
   cpf: null,
   hireDate: null,
+  instrumentIds: [],
 });
+
+const availableInstruments = ref<InstrumentDto[]>([]);
 
 watch(() => props.mode, (newMode) => {
   if (newMode === 'create') {
@@ -30,11 +34,20 @@ watch(() => props.mode, (newMode) => {
       cellphone: null,
       cpf: null,
       hireDate: null,
+      instrumentIds: [],
     };
   } else if (newMode === 'update' || newMode === 'view') {
     const selectedTeacher = useTeacherStore().teacher;
     if (selectedTeacher) {
-      teacher.value = { ...selectedTeacher, name: selectedTeacher.user.name, email: selectedTeacher.user.email };
+      teacher.value = { 
+        password: null,
+        cellphone: selectedTeacher.user.cellphone,
+        cpf: selectedTeacher.user.cpf,
+        hireDate: selectedTeacher.hireDate,
+        name: selectedTeacher.user.name, 
+        email: selectedTeacher.user.email,
+        instrumentIds: selectedTeacher.instruments?.map(instrument => instrument.id) || []
+      };
     }
   }
 });
@@ -55,6 +68,19 @@ function close() {
   emit('close');
 }
 
+async function loadInstruments() {
+  try {
+    const { data }: { data: InstrumentDto[] } = await axios.get('/instruments');
+    availableInstruments.value = data;
+  } catch (err) {
+    console.error('Erro ao carregar instrumentos:', err);
+  }
+}
+
+onMounted(() => {
+  loadInstruments();
+});
+
 async function save() {
   if (props.mode === 'view' || !props.mode) return;
 
@@ -62,9 +88,20 @@ async function save() {
     loading.value = true;
     const id = teacher.value.id;
     const message = !id ? 'Professor cadastrado com sucesso.' : 'Professor atualizado com sucesso.';
+    
+    const teacherData = {
+      name: teacher.value.name,
+      email: teacher.value.email,
+      password: teacher.value.password,
+      cellphone: teacher.value.cellphone,
+      cpf: teacher.value.cpf,
+      hireDate: teacher.value.hireDate,
+      instrumentIds: teacher.value.instrumentIds || []
+    };
+
     const { data }: { data: TeacherDto } = !id
-      ? await axios.post('/teacher', teacher.value)
-      : await axios.put(`/teacher/${id}`, teacher.value);
+      ? await axios.post('/teachers', teacherData)
+      : await axios.patch(`/teachers/${id}`, teacherData);
 
     const teacherStore = useTeacherStore();
     if (!id) teacherStore.addTeacher(data);
@@ -161,6 +198,23 @@ async function save() {
                 :disabled="props.mode === 'view'"
                 @click:append-inner="visible = !visible"
               ></v-text-field>
+            </v-col>
+            <v-col class="py-0" cols="12">
+              <div class="text-subtitle-1 text-medium-emphasis">Instrumentos</div>
+              <v-select
+                v-model="teacher.instrumentIds"
+                :items="availableInstruments"
+                item-title="name"
+                item-value="id"
+                label="Selecione os instrumentos"
+                multiple
+                density="compact"
+                prepend-inner-icon="mdi-piano"
+                variant="outlined"
+                :disabled="props.mode === 'view'"
+                hint="Selecione os instrumentos que o professor ensina"
+                persistent-hint
+              ></v-select>
             </v-col>
           </v-row>
         </v-container>

@@ -12,8 +12,8 @@ const { teachers } = storeToRefs(useTeacherStore());
 const headers = ref([
   { title: 'Nome', key: 'user.name', align: 'start' as const },
   { title: 'E-mail', key: 'user.email', align: 'start' as const },
-  { title: 'CPF', key: 'cpf', align: 'start' as const },
-  { title: 'Telefone', key: 'cellphone', align: 'start' as const },
+  { title: 'CPF', key: 'user.cpf', align: 'start' as const },
+  { title: 'Telefone', key: 'user.cellphone', align: 'start' as const },
   { title: 'Data de Contratação', key: 'hireDate', align: 'start' as const },
   { title: 'Ações', key: 'actions', sortable: false, align: 'end' as const },
 ]);
@@ -62,7 +62,7 @@ function closeModal() {
 async function getTeachers() {
   try {
     loading.value = true;
-    const { data }: { data: TeacherDto[] } = await axios.get('/teacher');
+    const { data }: { data: TeacherDto[] } = await axios.get('/teachers');
     useTeacherStore().setTeachers(data);
   } catch (err) {
     console.error(err);

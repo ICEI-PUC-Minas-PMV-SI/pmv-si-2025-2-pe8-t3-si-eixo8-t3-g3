@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn, ManyToMany, JoinTable, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn, ManyToMany, JoinTable, CreateDateColumn, UpdateDateColumn, OneToMany, Column } from 'typeorm';
 import { User } from './user.entity';
 import { Instrument } from './instrument.entity';
 import { MusicClass } from './music-class.entity';
@@ -7,6 +7,9 @@ import { MusicClass } from './music-class.entity';
 export class Teacher {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({ nullable: true })
+  hireDate?: Date;
 
   @OneToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn()

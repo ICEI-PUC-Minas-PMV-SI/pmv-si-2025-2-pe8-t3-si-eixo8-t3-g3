@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Instrument } from 'src/entities/instrument.entity';
 import { Teacher } from 'src/entities/teacher.entity';
-import { User } from 'src/entities/user.entity';
-import { Repository } from 'typeorm';
+import { User, UserRole } from 'src/entities/user.entity';
+import { In, Repository } from 'typeorm';
 import { CreateTeacherDto } from './dtos/create-teacher.dto';
 import { UpdateTeacherDto } from './dtos/update-teacher.dto';
 
@@ -19,21 +19,25 @@ export class TeacherService {
   ) {}
 
   async create(createTeacherDto: CreateTeacherDto): Promise<Teacher> {
-    const { userId, instrumentIds } = createTeacherDto;
+    let user: User;
+    user = await this.userRepository.findOne({ where: { email: createTeacherDto.email } });
 
-    const user = await this.userRepository.findOne({ where: { id: userId } });
-    if (!user) {
-      throw new NotFoundException(`User with ID ${userId} not found.`);
+    if (user) {
+      throw new NotFoundException(`Usuário com e-mail ${createTeacherDto.email} já existe.`);
     }
 
+    const newUser = this.userRepository.create({ ...createTeacherDto, role: UserRole.PROFESSOR });
+    const newUserSaved = await this.userRepository.save(newUser);
+
     const newTeacher = this.teacherRepository.create({
-      user: user,
+      user: newUserSaved,
+      hireDate: createTeacherDto.hireDate ? new Date(createTeacherDto.hireDate) : undefined,
     });
 
-    if (instrumentIds && instrumentIds.length > 0) {
-      const instruments = await this.instrumentRepository.findByIds(instrumentIds);
-      if (instruments.length !== instrumentIds.length) {
-        throw new NotFoundException('One or more instruments not found.');
+    if (createTeacherDto.instrumentIds && createTeacherDto.instrumentIds.length > 0) {
+      const instruments = await this.instrumentRepository.findBy({ id: In(createTeacherDto.instrumentIds) });
+      if (instruments.length !== createTeacherDto.instrumentIds.length) {
+        throw new NotFoundException('Um ou mais instrumentos não encontrados.');
       }
       newTeacher.instruments = instruments;
     }
@@ -67,17 +71,26 @@ export class TeacherService {
       throw new NotFoundException(`Teacher with ID ${id} not found.`);
     }
 
-    if (updateTeacherDto.instrumentIds) {
-      const instruments = await this.instrumentRepository.findByIds(updateTeacherDto.instrumentIds);
-      teacher.instruments = instruments;
+    if (updateTeacherDto.hireDate !== undefined) {
+      teacher.hireDate = updateTeacherDto.hireDate ? new Date(updateTeacherDto.hireDate) : undefined;
     }
 
-    if (updateTeacherDto.userId) {
-      const user = await this.userRepository.findOne({ where: { id: updateTeacherDto.userId } });
-      if (!user) {
-        throw new NotFoundException(`User with ID ${updateTeacherDto.userId} not found.`);
+    if (teacher.user) {
+      if (updateTeacherDto.name !== undefined) {
+        teacher.user.name = updateTeacherDto.name;
       }
-      teacher.user = user;
+      if (updateTeacherDto.email !== undefined) {
+        teacher.user.email = updateTeacherDto.email;
+      }
+      if (updateTeacherDto.password !== undefined) {
+        teacher.user.password = updateTeacherDto.password;
+      }
+      await this.userRepository.save(teacher.user);
+    }
+
+    if (updateTeacherDto.instrumentIds) {
+      const instruments = await this.instrumentRepository.findBy({ id: In(updateTeacherDto.instrumentIds) });
+      teacher.instruments = instruments;
     }
 
     return this.teacherRepository.save(teacher);

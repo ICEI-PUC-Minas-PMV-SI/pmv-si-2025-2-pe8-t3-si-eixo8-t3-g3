@@ -56,7 +56,6 @@ export class StudentService {
   async update(id: number, updateStudentDto: UpdateStudentDto): Promise<Student> {
     const student = await this.studentRepository.findOne({where: { id }, relations: ['user']});
 
-    console.log('teste1', updateStudentDto.email, student.user.email)
     if(student.user.email !== updateStudentDto.email) {
       const userExistsWithSameEmail = await this.userRepository.findOne({ where: { email: updateStudentDto.email } });
       if (userExistsWithSameEmail) {
