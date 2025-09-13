@@ -6,11 +6,13 @@ import axios from '@/services/axiosInstace';
 import { usePaymentStore } from '@/stores/payment';
 import { storeToRefs } from 'pinia';
 import { useToastStore } from '@/stores/toast';
+import type { PaymentStatus } from '@/interfaces/payment/paymentStatus';
 
 const { payments } = storeToRefs(usePaymentStore());
 
 const headers = ref([
   { title: 'Aluno', key: 'student.user.name', align: 'start' as const },
+  { title: 'Matrícula', key: 'registration.id', align: 'start' as const },
   { title: 'Valor', key: 'amount', align: 'start' as const },
   { title: 'Data de Pagamento', key: 'paymentDate', align: 'start' as const },
   { title: 'Status', key: 'status', align: 'start' as const },
@@ -22,9 +24,9 @@ const showModal = ref(false);
 const modalMode = ref<'view' | 'update' | 'create' | null>(null);
 const search = ref<string | null>();
 
-function getColor(status: 'PENDING' | 'PAID' | 'CANCELED') {
-  if (status === 'PAID') return 'green';
-  if (status === 'CANCELED') return 'red';
+function getColor(status: PaymentStatus) {
+  if (status === 'PAGO') return 'green';
+  if (status === 'CANCELADO') return 'red';
   return 'orange';
 }
 
@@ -48,7 +50,7 @@ function update(payment: PaymentDto) {
 async function remove(payment: PaymentDto) {
   try {
     loading.value = true;
-    await axios.delete(`/payment/${payment.id}`);
+    await axios.delete(`/payments/${payment.id}`);
     usePaymentStore().deletePayment(payment);
     useToastStore().showToast({ message: 'Pagamento deletado com sucesso.', type: 'success', color: 'green' });
   } catch (err) {
@@ -67,7 +69,7 @@ function closeModal() {
 async function getPayments() {
   try {
     loading.value = true;
-    const { data }: { data: PaymentDto[] } = await axios.get('/payment');
+    const { data }: { data: PaymentDto[] } = await axios.get('/payments');
     usePaymentStore().setPayments(data);
   } catch (err) {
     console.error(err);
@@ -84,6 +86,7 @@ getPayments();
     :headers="headers"
     :items="payments"
     :loading="loading"
+    :search="search ?? ''"
   >
     <template v-slot:top>
       <v-toolbar
@@ -126,8 +129,11 @@ getPayments();
     <template v-slot:item.student.user.name="{ item }">
       {{ item.student.user.name }}
     </template>
+    <template v-slot:item.registration.id="{ item }">
+      {{ item.registration.id }}
+    </template>
     <template v-slot:item.amount="{ value }">
-      R$ {{ value.toFixed(2).replace('.', ',') }}
+      R$ {{ parseFloat(value).toFixed(2).replace('.', ',') }}
     </template>
     <template v-slot:item.paymentDate="{ value }">
       {{ new Date(value).toLocaleDateString() }}

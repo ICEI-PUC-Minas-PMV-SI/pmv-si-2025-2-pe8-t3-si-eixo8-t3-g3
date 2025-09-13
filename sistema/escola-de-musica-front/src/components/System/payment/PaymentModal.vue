@@ -2,10 +2,11 @@
 import { computed, ref, watch } from 'vue';
 import type PaymentForm from '@/interfaces/payment/paymentForm';
 import type PaymentDto from '@/interfaces/payment/paymentDto';
-import type StudentDto from '@/interfaces/student/studentDto';
+import type RegistrationDto from '@/interfaces/registration/registrationDto';
 import axios from '@/services/axiosInstace';
 import { usePaymentStore } from '@/stores/payment';
 import { useToastStore } from '@/stores/toast';
+import { PaymentStatus } from '@/interfaces/payment/paymentStatus';
 
 const props = defineProps<{
   showModal: boolean;
@@ -13,14 +14,14 @@ const props = defineProps<{
 }>();
 const emit = defineEmits<{ (e: 'close'): void }>();
 
-// Dados da store para o seletor de alunos
-const students = ref<StudentDto[]>([]);
+const registrations = ref<RegistrationDto[]>([]);
 
 const payment = ref<PaymentForm>({
   amount: null,
   paymentDate: null,
-  status: 'PAID',
+  status: PaymentStatus.PAGO,
   studentId: null,
+  registrationId: null,
 });
 
 watch(() => props.mode, (newMode) => {
@@ -28,8 +29,9 @@ watch(() => props.mode, (newMode) => {
     payment.value = {
       amount: null,
       paymentDate: null,
-      status: 'PAID',
+      status: PaymentStatus.PENDENTE,
       studentId: null,
+      registrationId: null,
     };
   } else if (newMode === 'update' || newMode === 'view') {
     const selectedPayment = usePaymentStore().payment;
@@ -40,8 +42,20 @@ watch(() => props.mode, (newMode) => {
         paymentDate: selectedPayment.paymentDate,
         status: selectedPayment.status,
         studentId: selectedPayment.student.id,
+        registrationId: selectedPayment.registration.id,
       };
     }
+  }
+});
+
+watch(() => payment.value.registrationId, (newRegistrationId) => {
+  if (newRegistrationId) {
+    const selectedRegistration = registrations.value.find(reg => reg.id === newRegistrationId);
+    if (selectedRegistration && selectedRegistration.student) {
+      payment.value.studentId = selectedRegistration.student.id;
+    }
+  } else {
+    payment.value.studentId = null;
   }
 });
 
@@ -62,6 +76,15 @@ const statusOptions = ref([
   { title: 'Cancelado', value: 'CANCELED' },
 ]);
 
+const studentName = computed(() => {
+  if (payment.value.registrationId) {
+    const selectedRegistration = registrations.value.find(reg => reg.id === payment.value.registrationId);
+    return selectedRegistration?.student?.user?.name || 'Aluno não encontrado';
+  }
+  return 'Selecione uma Matrícula';
+});
+
+
 function close() {
   emit('close');
 }
@@ -72,10 +95,11 @@ async function save() {
   try {
     loading.value = true;
     const id = payment.value.id;
+    if(typeof payment.value.amount === 'string') payment.value.amount = parseFloat(payment.value.amount)
     const message = !id ? 'Pagamento registrado com sucesso.' : 'Pagamento atualizado com sucesso.';
     const { data }: { data: PaymentDto } = !id
-      ? await axios.post('/payment', payment.value)
-      : await axios.put(`/payment/${id}`, payment.value);
+      ? await axios.post('/payments', payment.value)
+      : await axios.put(`/payments/${id}`, payment.value);
 
     const paymentStore = usePaymentStore();
     if (!id) paymentStore.addPayment(data);
@@ -94,10 +118,10 @@ async function save() {
 async function fetchDependencies() {
   try {
     loading.value = true;
-    const { data: studentsData }: { data: StudentDto[] } = await axios.get('/student');
-    students.value = studentsData;
+    const { data: registrationsData }: { data: RegistrationDto[] } = await axios.get('/registrations');
+    registrations.value = registrationsData;
   } catch (err) {
-    console.error('Erro ao buscar alunos:', err);
+    console.error('Erro ao buscar dependências:', err);
   } finally {
     loading.value = false;
   }
@@ -117,17 +141,32 @@ fetchDependencies();
         <v-container>
           <v-row>
             <v-col class="py-0" cols="12">
-              <div class="text-subtitle-1 text-medium-emphasis">Aluno</div>
+              <div class="text-subtitle-1 text-medium-emphasis">Matrícula</div>
               <v-select
-                v-model="payment.studentId"
-                :items="students"
-                placeholder="Selecione o aluno"
+                v-model="payment.registrationId"
+                :items="registrations"
+                placeholder="Selecione a matrícula"
                 variant="outlined"
-                item-title="user.name"
+                item-title="id"
                 item-value="id"
                 density="compact"
                 :disabled="props.mode === 'view' || props.mode === 'update'"
-              ></v-select>
+              >
+              <template v-slot:item="{ props, item }">
+                <v-list-item v-bind="props" :title="`ID: ${item.raw.id} - Aluno: ${item.raw.student?.user?.name}`"></v-list-item>
+              </template>
+              </v-select>
+            </v-col>
+            <v-col class="py-0" cols="12">
+              <div class="text-subtitle-1 text-medium-emphasis">Aluno</div>
+              <v-text-field
+                :model-value="studentName"
+                density="compact"
+                placeholder="Aluno associado"
+                prepend-inner-icon="mdi-account"
+                variant="outlined"
+                disabled
+              ></v-text-field>
             </v-col>
             <v-col class="py-0" cols="12" md="6">
               <div class="text-subtitle-1 text-medium-emphasis">Valor</div>
