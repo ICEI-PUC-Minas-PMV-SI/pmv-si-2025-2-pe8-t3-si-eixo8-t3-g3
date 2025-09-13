@@ -11,7 +11,8 @@ const { registrations } = storeToRefs(useRegistrationStore());
 
 const headers = ref([
   { title: 'Aluno', key: 'student.user.name', align: 'start' as const },
-  { title: 'Turma', key: 'musicClass.name', align: 'start' as const },
+  { title: 'Início', key: 'startDate', align: 'start' as const },
+  { title: 'Término', key: 'endDate', align: 'start' as const },
   { title: 'Status', key: 'status', align: 'start' as const },
   { title: 'Ações', key: 'actions', sortable: false, align: 'end' as const },
 ]);
@@ -41,7 +42,7 @@ function update(registration: RegistrationDto) {
 async function remove(registration: RegistrationDto) {
   try {
     loading.value = true;
-    await axios.delete(`/registration/${registration.id}`);
+    await axios.delete(`/registrations/${registration.id}`);
     useRegistrationStore().deleteRegistration(registration);
     useToastStore().showToast({ message: 'Matrícula deletada com sucesso.', type: 'success', color: 'green' });
   } catch (err) {
@@ -57,10 +58,16 @@ function closeModal() {
   modalMode.value = null;
 }
 
+function getStatusColor(status: 'VIGENTE' | 'INATIVA' | 'PENDENTE') {
+  if (status === 'VIGENTE') return 'green';
+  if (status === 'INATIVA') return 'red';
+  return 'orange';
+}
+
 async function getRegistrations() {
   try {
     loading.value = true;
-    const { data }: { data: RegistrationDto[] } = await axios.get('/registration');
+    const { data }: { data: RegistrationDto[] } = await axios.get('/registrations');
     useRegistrationStore().setRegistrations(data);
   } catch (err) {
     console.error(err);
@@ -77,6 +84,7 @@ getRegistrations();
     :headers="headers"
     :items="registrations"
     :loading="loading"
+    :search="search ?? ''"
   >
     <template v-slot:top>
       <v-toolbar
@@ -119,12 +127,15 @@ getRegistrations();
     <template v-slot:item.student.user.name="{ item }">
       {{ item.student.user.name }}
     </template>
-    <template v-slot:item.musicClass.name="{ item }">
-      {{ item.musicClass.name }}
+    <template v-slot:item.startDate="{ value }">
+      {{ new Date(value).toLocaleDateString() }}
+    </template>
+    <template v-slot:item.endDate="{ value }">
+      {{ new Date(value).toLocaleDateString() }}
     </template>
     <template v-slot:item.status="{ item }">
-      <v-chip :color="item.status === 'ACTIVE' ? 'green' : 'red'">
-        {{ item.status === 'ACTIVE' ? 'Ativo' : 'Inativo' }}
+      <v-chip :color="getStatusColor(item.status)">
+        {{ item.status }}
       </v-chip>
     </template>
     <template v-slot:item.actions="{ item }">

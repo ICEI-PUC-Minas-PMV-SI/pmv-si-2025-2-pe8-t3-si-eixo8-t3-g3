@@ -3,10 +3,12 @@ import { computed, ref, watch } from 'vue';
 import type RegistrationForm from '@/interfaces/registration/registrationForm';
 import type RegistrationDto from '@/interfaces/registration/registrationDto';
 import type StudentDto from '@/interfaces/student/studentDto';
+import type MusicClassDto from '@/interfaces/music-class/musicClassDto';
+import type InstrumentDto from '@/interfaces/instrument/instrumentDto';
 import axios from '@/services/axiosInstace';
 import { useRegistrationStore } from '@/stores/registration';
 import { useToastStore } from '@/stores/toast';
-import type MusicClassDto from '@/interfaces/music-class/musicClassDto';
+import { RegistrationStatus } from '@/interfaces/registration/registrationStatus';
 
 const props = defineProps<{
   showModal: boolean;
@@ -14,33 +16,65 @@ const props = defineProps<{
 }>();
 const emit = defineEmits<{ (e: 'close'): void }>();
 
-// Dados da store
 const students = ref<StudentDto[]>([]);
 const musicClasses = ref<MusicClassDto[]>([]);
+const availableInstruments = ref<InstrumentDto[]>([]);
 
 const registration = ref<RegistrationForm>({
+  startDate: null,
+  endDate: null,
+  status: RegistrationStatus.PENDENTE,
   studentId: null,
-  musicClassId: null,
-  status: 'ACTIVE',
+  musicClassIds: [],
+  instrumentIds: [],
 });
 
 watch(() => props.mode, (newMode) => {
   if (newMode === 'create') {
-    registration.value.studentId = null;
-    registration.value.musicClassId = null;
-    registration.value.status = 'ACTIVE';
+    registration.value = {
+      startDate: null,
+      endDate: null,
+      status: RegistrationStatus.PENDENTE,
+      studentId: null,
+      musicClassIds: [],
+      instrumentIds: [],
+    };
   } else if (newMode === 'update' || newMode === 'view') {
     const selectedRegistration = useRegistrationStore().registration;
     if (selectedRegistration) {
       registration.value = {
         id: selectedRegistration.id,
-        studentId: selectedRegistration.student.id,
-        musicClassId: selectedRegistration.musicClass.id,
+        startDate: selectedRegistration.startDate,
+        endDate: selectedRegistration.endDate,
         status: selectedRegistration.status,
+        studentId: selectedRegistration.student.id,
+        musicClassIds: selectedRegistration.musicClasses?.map(mc => mc.id) || [],
+        instrumentIds: selectedRegistration.instruments?.map(i => i.id) || [],
       };
     }
   }
 });
+
+watch(() => registration.value.musicClassIds, (newIds, oldIds) => {
+  const allInstruments: InstrumentDto[] = [];
+  const selectedClasses = musicClasses.value.filter(mc => newIds.includes(mc.id));
+
+  selectedClasses.forEach(mc => {
+    if (mc.instruments) {
+      allInstruments.push(...mc.instruments);
+    }
+  });
+
+  const uniqueInstruments = Array.from(new Set(allInstruments.map(i => i.id)))
+    .map(id => allInstruments.find(i => i.id === id)!);
+  
+  availableInstruments.value = uniqueInstruments;
+
+  registration.value.instrumentIds = registration.value.instrumentIds.filter(id =>
+    availableInstruments.value.some(inst => inst.id === id)
+  );
+
+}, { deep: true });
 
 const loading = ref(false);
 
@@ -54,8 +88,9 @@ const title = computed(() => {
 });
 
 const statusOptions = ref([
-  { title: 'Ativo', value: 'ACTIVE' },
-  { title: 'Inativo', value: 'INACTIVE' },
+  { title: 'Vigente', value: 'VIGENTE' },
+  { title: 'Inativa', value: 'INATIVA' },
+  { title: 'Pendente', value: 'PENDENTE' },
 ]);
 
 function close() {
@@ -70,8 +105,8 @@ async function save() {
     const id = registration.value.id;
     const message = !id ? 'Matrícula criada com sucesso.' : 'Matrícula atualizada com sucesso.';
     const { data }: { data: RegistrationDto } = !id
-      ? await axios.post('/registration', registration.value)
-      : await axios.put(`/registration/${id}`, registration.value);
+      ? await axios.post('/registrations', registration.value)
+      : await axios.put(`/registrations/${id}`, registration.value);
 
     const registrationStore = useRegistrationStore();
     if (!id) registrationStore.addRegistration(data);
@@ -90,10 +125,10 @@ async function save() {
 async function fetchDependencies() {
   try {
     loading.value = true;
-    const { data: studentsData }: { data: StudentDto[] } = await axios.get('/student');
+    const { data: studentsData }: { data: StudentDto[] } = await axios.get('/students');
     students.value = studentsData;
 
-    const { data: classesData }: { data: MusicClassDto[] } = await axios.get('/music-class');
+    const { data: classesData }: { data: MusicClassDto[] } = await axios.get('/music-classes');
     musicClasses.value = classesData;
   } catch (err) {
     console.error('Erro ao buscar dependências:', err);
@@ -115,6 +150,30 @@ fetchDependencies();
       <v-card-text>
         <v-container>
           <v-row>
+            <v-col class="py-0" cols="12" md="6">
+              <div class="text-subtitle-1 text-medium-emphasis">Data de Início</div>
+              <v-text-field
+                v-model="registration.startDate"
+                type="date"
+                density="compact"
+                placeholder="YYYY-MM-DD"
+                prepend-inner-icon="mdi-calendar"
+                variant="outlined"
+                :disabled="props.mode === 'view'"
+              ></v-text-field>
+            </v-col>
+            <v-col class="py-0" cols="12" md="6">
+              <div class="text-subtitle-1 text-medium-emphasis">Data de Término</div>
+              <v-text-field
+                v-model="registration.endDate"
+                type="date"
+                density="compact"
+                placeholder="YYYY-MM-DD"
+                prepend-inner-icon="mdi-calendar"
+                variant="outlined"
+                :disabled="props.mode === 'view'"
+              ></v-text-field>
+            </v-col>
             <v-col class="py-0" cols="12">
               <div class="text-subtitle-1 text-medium-emphasis">Aluno</div>
               <v-select
@@ -129,16 +188,33 @@ fetchDependencies();
               ></v-select>
             </v-col>
             <v-col class="py-0" cols="12">
-              <div class="text-subtitle-1 text-medium-emphasis">Turma</div>
+              <div class="text-subtitle-1 text-medium-emphasis">Turmas</div>
               <v-select
-                v-model="registration.musicClassId"
+                v-model="registration.musicClassIds"
                 :items="musicClasses"
-                placeholder="Selecione a turma"
+                placeholder="Selecione as turmas"
                 variant="outlined"
                 item-title="name"
                 item-value="id"
                 density="compact"
-                :disabled="props.mode === 'view' || props.mode === 'update'"
+                multiple
+                chips
+                :disabled="props.mode === 'view'"
+              ></v-select>
+            </v-col>
+            <v-col class="py-0" cols="12">
+              <div class="text-subtitle-1 text-medium-emphasis">Instrumentos</div>
+              <v-select
+                v-model="registration.instrumentIds"
+                :items="availableInstruments"
+                placeholder="Selecione os instrumentos"
+                variant="outlined"
+                item-title="name"
+                item-value="id"
+                density="compact"
+                multiple
+                chips
+                :disabled="props.mode === 'view' || registration.musicClassIds.length === 0"
               ></v-select>
             </v-col>
             <v-col class="py-0" cols="12">

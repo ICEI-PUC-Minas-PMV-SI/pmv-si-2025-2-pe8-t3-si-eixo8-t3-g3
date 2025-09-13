@@ -40,7 +40,7 @@ export class RegistrationService {
   }
 
   async findAll(): Promise<Registration[]> {
-    return this.registrationRepository.find({ relations: ['student', 'instruments'] });
+    return this.registrationRepository.find({ relations: ['student', 'student.user', 'instruments'] });
   }
 
   async findOne(id: number): Promise<Registration> {
