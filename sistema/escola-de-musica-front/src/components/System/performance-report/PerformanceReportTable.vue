@@ -11,9 +11,9 @@ const { performanceReports } = storeToRefs(usePerformanceReportStore());
 
 const headers = ref([
   { title: 'Aluno', key: 'student.user.name', align: 'start' as const },
-  { title: 'Turma', key: 'musicClass.name', align: 'start' as const },
-  { title: 'Nota', key: 'grade', align: 'start' as const },
-  { title: 'Data do Relatório', key: 'reportDate', align: 'start' as const },
+  { title: 'Instrumento', key: 'instrument.name', align: 'start' as const },
+  { title: 'Músicas Aprendidas', key: 'numberOfSongsLearned', align: 'start' as const },
+  { title: 'Data de Criação', key: 'createdAt', align: 'start' as const },
   { title: 'Ações', key: 'actions', sortable: false, align: 'end' as const },
 ]);
 
@@ -42,7 +42,7 @@ function update(report: PerformanceReportDto) {
 async function remove(report: PerformanceReportDto) {
   try {
     loading.value = true;
-    await axios.delete(`/performance-report/${report.id}`);
+    await axios.delete(`/performance-reports/${report.id}`);
     usePerformanceReportStore().deletePerformanceReport(report);
     useToastStore().showToast({ message: 'Relatório deletado com sucesso.', type: 'success', color: 'green' });
   } catch (err) {
@@ -61,7 +61,7 @@ function closeModal() {
 async function getPerformanceReports() {
   try {
     loading.value = true;
-    const { data }: { data: PerformanceReportDto[] } = await axios.get('/performance-report');
+    const { data }: { data: PerformanceReportDto[] } = await axios.get('/performance-reports');
     usePerformanceReportStore().setPerformanceReports(data);
   } catch (err) {
     console.error(err);
@@ -120,13 +120,13 @@ getPerformanceReports();
     <template v-slot:item.student.user.name="{ item }">
       {{ item.student.user.name }}
     </template>
-    <template v-slot:item.musicClass.name="{ item }">
-      {{ item.musicClass.name }}
+    <template v-slot:item.instrument.name="{ item }">
+      {{ item.instrument.name }}
     </template>
-    <template v-slot:item.grade="{ value }">
-      {{ value.toFixed(1) }}
+    <template v-slot:item.numberOfSongsLearned="{ value }">
+      {{ value }}
     </template>
-    <template v-slot:item.reportDate="{ value }">
+    <template v-slot:item.createdAt="{ value }">
       {{ new Date(value).toLocaleDateString() }}
     </template>
     <template v-slot:item.actions="{ item }">

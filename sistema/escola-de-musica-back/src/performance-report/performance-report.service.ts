@@ -21,7 +21,7 @@ export class PerformanceReportService {
   async create(createPerformanceReportDto: CreatePerformanceReportDto): Promise<PerformanceReport> {
     const { studentId, instrumentId, ...reportData } = createPerformanceReportDto;
 
-    const student = await this.studentRepository.findOne({ where: { id: studentId } });
+    const student = await this.studentRepository.findOne({ where: { id: studentId }, relations: ['user'] });
     if (!student) {
       throw new NotFoundException(`Student with ID ${studentId} not found.`);
     }
@@ -41,7 +41,7 @@ export class PerformanceReportService {
   }
 
   async findAll(): Promise<PerformanceReport[]> {
-    return this.performanceReportRepository.find({ relations: ['student', 'instrument'] });
+    return this.performanceReportRepository.find({ relations: ['student', 'student.user', 'instrument'] });
   }
 
   async findOne(id: number): Promise<PerformanceReport> {
