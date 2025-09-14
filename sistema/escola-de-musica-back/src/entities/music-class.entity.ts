@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTabl
 import { Teacher } from './teacher.entity';
 import { Student } from './student.entity';
 import { Instrument } from './instrument.entity';
-import { Attendance } from './attendence.entity';
+import { Attendance } from './attendance.entity';
 import { Registration } from './registration.entity';
 
 @Entity()

@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Attendance } from 'src/entities/attendence.entity';
-import { MusicClass } from 'src/entities/music-class.entity';
-import { Student } from 'src/entities/student.entity';
 import { Repository } from 'typeorm';
+import { Attendance } from '../entities/attendance.entity';
 import { CreateAttendanceDto } from './dtos/create-attendance.dto';
 import { UpdateAttendanceDto } from './dtos/update-attendance.dto';
+import { Student } from '../entities/student.entity';
+import { MusicClass } from '../entities/music-class.entity';
 
 @Injectable()
 export class AttendanceService {
@@ -21,14 +21,14 @@ export class AttendanceService {
   async create(createAttendanceDto: CreateAttendanceDto): Promise<Attendance> {
     const { studentId, musicClassId, ...attendanceData } = createAttendanceDto;
 
-    const student = await this.studentRepository.findOne({ where: { id: studentId } });
+    const student = await this.studentRepository.findOne({ where: { id: studentId }, relations: ['user'] });
     if (!student) {
       throw new NotFoundException(`Student with ID ${studentId} not found.`);
     }
 
     const musicClass = await this.musicClassRepository.findOne({ where: { id: musicClassId } });
     if (!musicClass) {
-      throw new NotFoundException(`Music class with ID ${musicClassId} not found.`);
+      throw new NotFoundException(`MusicClass with ID ${musicClassId} not found.`);
     }
 
     const newAttendance = this.attendanceRepository.create({
@@ -37,30 +37,29 @@ export class AttendanceService {
       musicClass,
     });
 
-    return this.attendanceRepository.save(newAttendance);
+    const attendanceSaved = await this.attendanceRepository.save(newAttendance);
+
+    return attendanceSaved;
   }
 
   async findAll(): Promise<Attendance[]> {
-    return this.attendanceRepository.find({ relations: ['student', 'musicClass'] });
+    return this.attendanceRepository.find({ relations: ['student', 'student.user', 'musicClass'] });
   }
 
   async findOne(id: number): Promise<Attendance> {
     const attendance = await this.attendanceRepository.findOne({
       where: { id },
-      relations: ['student', 'musicClass'],
+      relations: ['student', 'student.user', 'musicClass'],
     });
     if (!attendance) {
-      throw new NotFoundException(`Attendance with ID ${id} not found.`);
+      throw new NotFoundException(`Presença com ID ${id} não encontrado.`);
     }
     return attendance;
   }
 
   async update(id: number, updateAttendanceDto: UpdateAttendanceDto): Promise<Attendance> {
     const attendance = await this.findOne(id);
-
-    // Mescla as propriedades do DTO com a entidade
     this.attendanceRepository.merge(attendance, updateAttendanceDto);
-
     return this.attendanceRepository.save(attendance);
   }
 

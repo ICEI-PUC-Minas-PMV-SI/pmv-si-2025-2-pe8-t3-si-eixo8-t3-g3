@@ -1,7 +1,10 @@
+import type { AttendanceStatus } from './attendanceStatus';
+
 export default interface AttendanceForm {
   id?: number | null;
   date: string | null;
-  status: 'PRESENT' | 'ABSENT' | 'JUSTIFIED_ABSENCE';
+  status: AttendanceStatus;
+  notes?: string | null;
   studentId: number | null;
   musicClassId: number | null;
 }

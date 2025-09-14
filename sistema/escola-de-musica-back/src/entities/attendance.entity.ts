@@ -1,14 +1,27 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Student } from './student.entity';
 import { MusicClass } from './music-class.entity';
+
+export enum AttendanceStatus {
+  PRESENT = 'PRESENTE',
+  ABSENT = 'AUSENTE',
+  JUSTIFIED_ABSENCE = 'FALTA_JUSTIFICADA',
+}
 
 @Entity()
 export class Attendance {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ default: false })
-  isPresent: boolean;
+  @Column({ type: 'date' })
+  date: Date;
+
+  @Column({
+    type: 'enum',
+    enum: AttendanceStatus,
+    default: AttendanceStatus.PRESENT,
+  })
+  status: AttendanceStatus;
 
   @Column({ nullable: true })
   notes: string;
