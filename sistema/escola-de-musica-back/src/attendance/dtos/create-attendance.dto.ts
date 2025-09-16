@@ -1,17 +1,20 @@
-import { IsNumber, IsBoolean, IsString, IsOptional } from 'class-validator';
+import { IsDateString, IsEnum, IsInt, IsOptional, IsString } from 'class-validator';
+import { AttendanceStatus } from '../../entities/attendance.entity';
 
 export class CreateAttendanceDto {
-  @IsNumber()
+  @IsDateString()
+  date: string;
+
+  @IsEnum(AttendanceStatus)
+  status: AttendanceStatus;
+
+  @IsOptional()
+  @IsString()
+  notes?: string;
+
+  @IsInt()
   studentId: number;
 
-  @IsNumber()
+  @IsInt()
   musicClassId: number;
-
-  @IsBoolean()
-  @IsOptional()
-  isPresent?: boolean;
-
-  @IsString()
-  @IsOptional()
-  notes?: string;
 }

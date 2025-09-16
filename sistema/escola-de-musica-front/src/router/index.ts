@@ -30,42 +30,42 @@ const router = createRouter({
     },
     {
       path: '/students',
-      name: 'Students',
+      name: 'Estudantes',
       component: () => import('@/views/System/Student.vue')
     },
     {
       path: '/teachers',
-      name: 'Teachers',
+      name: 'Professores',
       component: () => import('@/views/System/Teachers.vue')
     },
     {
       path: '/music-classes',
-      name: 'Music Classes',
+      name: 'Turmas',
       component: () => import('@/views/System/MusicClasses.vue')
     },
     {
       path: '/instruments',
-      name: 'Instruments',
+      name: 'Instrumentos',
       component: () => import('@/views/System/Instruments.vue')
     },
     {
       path: '/registrations',
-      name: 'Registrations',
+      name: 'Matrículas',
       component: () => import('@/views/System/Registrations.vue')
     },
     {
       path: '/payments',
-      name: 'Payments',
+      name: 'Pagamentos',
       component: () => import('@/views/System/Payment.vue')
     },
     {
       path: '/attendances',
-      name: 'Attendances',
+      name: 'Presenças',
       component: () => import('@/views/System/Attendances.vue')
     },
     {
       path: '/performance-reports',
-      name: 'Performance Reports',
+      name: 'Relatório de Performance',
       component: () => import('@/views/System/PerformanceReports.vue')
     }
   ]

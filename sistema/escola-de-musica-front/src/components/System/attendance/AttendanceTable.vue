@@ -6,6 +6,7 @@ import axios from '@/services/axiosInstace';
 import { useAttendanceStore } from '@/stores/attendance';
 import { storeToRefs } from 'pinia';
 import { useToastStore } from '@/stores/toast';
+import { AttendanceStatus } from '@/interfaces/attendance/attendanceStatus';
 
 const { attendances } = storeToRefs(useAttendanceStore());
 
@@ -22,9 +23,9 @@ const showModal = ref(false);
 const modalMode = ref<'view' | 'update' | 'create' | null>(null);
 const search = ref<string | null>();
 
-function getColor(status: 'PRESENT' | 'ABSENT' | 'JUSTIFIED_ABSENCE') {
-  if (status === 'PRESENT') return 'green';
-  if (status === 'ABSENT') return 'red';
+function getColor(status: AttendanceStatus) {
+  if (status === AttendanceStatus.PRESENT) return 'green';
+  if (status === AttendanceStatus.ABSENT) return 'red';
   return 'orange';
 }
 
@@ -48,7 +49,7 @@ function update(attendance: AttendanceDto) {
 async function remove(attendance: AttendanceDto) {
   try {
     loading.value = true;
-    await axios.delete(`/attendance/${attendance.id}`);
+    await axios.delete(`/attendances/${attendance.id}`);
     useAttendanceStore().deleteAttendance(attendance);
     useToastStore().showToast({ type: 'success', message: 'Frequência deletada com sucesso.', color: 'green' });
   } catch (err) {
@@ -67,7 +68,7 @@ function closeModal() {
 async function getAttendances() {
   try {
     loading.value = true;
-    const { data }: { data: AttendanceDto[] } = await axios.get('/attendance');
+    const { data }: { data: AttendanceDto[] } = await axios.get('/attendances');
     useAttendanceStore().setAttendances(data);
   } catch (err) {
     console.error(err);
@@ -84,6 +85,7 @@ getAttendances();
     :headers="headers"
     :items="attendances"
     :loading="loading"
+    :search="search ?? ''"
   >
     <template v-slot:top>
       <v-toolbar
@@ -124,10 +126,10 @@ getAttendances();
       <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
     </template>
     <template v-slot:item.student.user.name="{ item }">
-      {{ item.student.user.name }}
+      {{ item.student?.user?.name }}
     </template>
     <template v-slot:item.musicClass.name="{ item }">
-      {{ item.musicClass.name }}
+      {{ item.musicClass?.name }}
     </template>
     <template v-slot:item.date="{ value }">
       {{ new Date(value).toLocaleDateString() }}

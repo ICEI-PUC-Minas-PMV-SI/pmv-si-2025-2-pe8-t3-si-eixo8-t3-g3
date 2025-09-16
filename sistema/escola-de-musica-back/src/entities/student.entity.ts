@@ -4,7 +4,7 @@ import { Registration } from './registration.entity';
 import { Payment } from './payment.entity';
 import { MusicClass } from './music-class.entity';
 import { PerformanceReport } from './performance-report.entity';
-import { Attendance } from './attendence.entity';
+import { Attendance } from './attendance.entity';
 
 @Entity()
 export class Student {

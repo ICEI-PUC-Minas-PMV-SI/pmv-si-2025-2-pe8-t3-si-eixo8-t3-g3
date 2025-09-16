@@ -29,7 +29,7 @@ import { VList, VListItem, VDivider } from 'vuetify/components';
     <v-list-item
       link
       prepend-icon="mdi-calendar-month"
-      title="Aulas"
+      title="Turmas"
       value="music-classes"
       to="/music-classes"
     />
