@@ -41,7 +41,7 @@ export class PaymentService {
   }
 
   async findAll(): Promise<Payment[]> {
-    return this.paymentRepository.find({ relations: ['student', 'registration'] });
+    return this.paymentRepository.find({ relations: ['student', 'student.user', 'registration'] });
   }
 
   async findOne(id: number): Promise<Payment> {

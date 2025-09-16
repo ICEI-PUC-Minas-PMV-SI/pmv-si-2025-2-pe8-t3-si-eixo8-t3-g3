@@ -3,9 +3,9 @@ import { Student } from './student.entity';
 import { Registration } from './registration.entity';
 
 export enum PaymentStatus {
-  PENDING = 'PENDING',
-  PAID = 'PAID',
-  CANCELED = 'CANCELED'
+  PENDENTE = 'PENDENTE',
+  PAGO = 'PAGO',
+  CANCELADO = 'CANCELADO'
 }
 
 @Entity()
@@ -19,7 +19,7 @@ export class Payment {
   @Column()
   paymentDate: Date;
 
-  @Column({ type: 'enum', enum: ['PENDING', 'PAID', 'CANCELED'], default: 'PENDING' })
+  @Column({ type: 'enum', enum: ['PENDENTE', 'PAGO', 'CANCELADO'], default: 'PENDENTE' })
   status: string;
 
   @ManyToOne(() => Student, student => student.payments)
