@@ -1,23 +1,46 @@
 <script setup lang="ts">
 import BarChart from '@/components/System/dashboard/BarChart.vue';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import axios from '@/services/axiosInstace';
 
-// Dados mockados para o dashboard. 
-const metrics = ref([
-  { title: 'Total de Alunos', value: 150, icon: 'mdi-account-group', color: 'blue-grey' },
-  { title: 'Total de Professores', value: 12, icon: 'mdi-human-male-board', color: 'green' },
-  { title: 'Aulas Agendadas', value: 45, icon: 'mdi-calendar-month', color: 'orange' },
-  { title: 'Pagamentos Pendentes', value: 7, icon: 'mdi-cash-multiple', color: 'red' },
-]);
+const metrics = ref<any[]>([]);
+const newStudentsData = ref<number[]>([]);
+const months = ref<string[]>([]);
+const recentEvents = ref<any[]>([]);
+const loading = ref(true);
 
-// Dados do gráfico: novos alunos nos últimos 6 meses
-const newStudentsData = ref([20, 45, 60, 50, 80, 75]);
-const months = ref(['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun']);
+const fetchDashboardData = async () => {
+  try {
+    loading.value = true;
+    
+    const metricsResponse = await axios.get('/dashboard/metrics');
+    metrics.value = [
+      { title: 'Total de Alunos', value: metricsResponse.data.totalStudents, icon: 'mdi-account-group', color: 'blue-grey' },
+      { title: 'Total de Professores', value: metricsResponse.data.totalTeachers, icon: 'mdi-human-male-board', color: 'green' },
+      { title: 'Total de Turmas', value: metricsResponse.data.totalMusicClasses, icon: 'mdi-calendar-month', color: 'orange' },
+      { title: 'Pagamentos Pendentes', value: metricsResponse.data.pendingPayments, icon: 'mdi-cash-multiple', color: 'red' },
+    ];
+
+    const studentsDataResponse = await axios.get('/dashboard/students-by-month');
+    newStudentsData.value = studentsDataResponse.data.series;
+    months.value = studentsDataResponse.data.categories;
+
+    const eventsResponse = await axios.get('/dashboard/events');
+    recentEvents.value = eventsResponse.data;
+
+  } catch (err) {
+    console.error('Erro ao buscar dados do dashboard:', err);
+  } finally {
+    loading.value = false;
+  }
+};
+
+onMounted(fetchDashboardData);
 </script>
 
 <template>
   <v-container>
-    <v-card class="mr-3 pa-5" max-width="1100">
+    <v-card class="mr-3 pa-5" max-width="1100" :loading="loading">
       <v-row class="mb-5">
         <v-col
           v-for="(metric, index) in metrics"
@@ -56,19 +79,11 @@ const months = ref(['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun']);
             <v-card-title>Avisos e Notificações</v-card-title>
             <v-list density="compact">
               <v-list-item
-                prepend-icon="mdi-alert-circle-outline"
-                title="Novo aluno matriculado: João Silva"
-                subtitle="Matrícula para aula de violão."
-              ></v-list-item>
-              <v-list-item
-                prepend-icon="mdi-cash-remove"
-                title="Pagamento pendente: Maria Clara"
-                subtitle="Mensalidade de outubro em atraso."
-              ></v-list-item>
-              <v-list-item
-                prepend-icon="mdi-calendar-check"
-                title="Aula de piano agendada"
-                subtitle="Prof. Ana para 15:00 na sala 3."
+                v-for="(event, index) in recentEvents"
+                :key="index"
+                :prepend-icon="event.icon"
+                :title="event.title"
+                :subtitle="event.subtitle"
               ></v-list-item>
             </v-list>
           </v-card>

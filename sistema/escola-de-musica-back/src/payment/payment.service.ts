@@ -21,7 +21,7 @@ export class PaymentService {
   async create(createPaymentDto: CreatePaymentDto): Promise<Payment> {
     const { studentId, registrationId, ...paymentData } = createPaymentDto;
 
-    const student = await this.studentRepository.findOne({ where: { id: studentId } });
+    const student = await this.studentRepository.findOne({ where: { id: studentId }, relations: ['user'] });
     if (!student) {
       throw new NotFoundException(`Student with ID ${studentId} not found.`);
     }

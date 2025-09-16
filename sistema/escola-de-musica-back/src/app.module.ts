@@ -14,6 +14,7 @@ import { MusicClassModule } from './music-class/music-class.module';
 import { AttendanceModule } from './attendance/attendance.module';
 import { PaymentModule } from './payment/payment.module';
 import { PerformanceReportModule } from './performance-report/performance-report.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 const cookieSession = require('cookie-session');
 
 @Module({
@@ -44,7 +45,8 @@ const cookieSession = require('cookie-session');
     MusicClassModule,
     AttendanceModule,
     PaymentModule,
-    PerformanceReportModule
+    PerformanceReportModule,
+    DashboardModule
   ],
   controllers: [AppController],
   providers: [
