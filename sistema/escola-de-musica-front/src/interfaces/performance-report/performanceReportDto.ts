@@ -1,11 +1,11 @@
 import type StudentDto from '@/interfaces/student/studentDto';
-import type MusicClassDto from '../music-class/musicClassDto';
+import type InstrumentDto from '@/interfaces/instrument/instrumentDto';
 
 export default interface PerformanceReportDto {
   id: number;
-  grade: number;
-  notes: string;
-  reportDate: string;
+  numberOfSongsLearned: number;
+  notes?: string;
+  createdAt: string;
   student: StudentDto;
-  musicClass: MusicClassDto;
+  instrument: InstrumentDto;
 }

@@ -3,10 +3,10 @@ import { computed, ref, watch } from 'vue';
 import type PerformanceReportForm from '@/interfaces/performance-report/performanceReportForm';
 import type PerformanceReportDto from '@/interfaces/performance-report/performanceReportDto';
 import type StudentDto from '@/interfaces/student/studentDto';
+import type InstrumentDto from '@/interfaces/instrument/instrumentDto';
 import axios from '@/services/axiosInstace';
 import { usePerformanceReportStore } from '@/stores/performanceReport';
 import { useToastStore } from '@/stores/toast';
-import type MusicClassDto from '@/interfaces/music-class/musicClassDto';
 
 const props = defineProps<{
   showModal: boolean;
@@ -14,37 +14,33 @@ const props = defineProps<{
 }>();
 const emit = defineEmits<{ (e: 'close'): void }>();
 
-// Dados da store para os seletores
 const students = ref<StudentDto[]>([]);
-const musicClasses = ref<MusicClassDto[]>([]);
+const instruments = ref<InstrumentDto[]>([]);
 
 const performanceReport = ref<PerformanceReportForm>({
-  grade: null,
+  numberOfSongsLearned: null,
   notes: null,
-  reportDate: null,
   studentId: null,
-  musicClassId: null,
+  instrumentId: null,
 });
 
 watch(() => props.mode, (newMode) => {
   if (newMode === 'create') {
     performanceReport.value = {
-      grade: null,
+      numberOfSongsLearned: null,
       notes: null,
-      reportDate: null,
       studentId: null,
-      musicClassId: null,
+      instrumentId: null,
     };
   } else if (newMode === 'update' || newMode === 'view') {
     const selectedReport = usePerformanceReportStore().performanceReport;
     if (selectedReport) {
       performanceReport.value = {
         id: selectedReport.id,
-        grade: selectedReport.grade,
+        numberOfSongsLearned: selectedReport.numberOfSongsLearned,
         notes: selectedReport.notes,
-        reportDate: selectedReport.reportDate,
         studentId: selectedReport.student.id,
-        musicClassId: selectedReport.musicClass.id,
+        instrumentId: selectedReport.instrument.id,
       };
     }
   }
@@ -71,10 +67,11 @@ async function save() {
   try {
     loading.value = true;
     const id = performanceReport.value.id;
+    const payload = { ...performanceReport.value, numberOfSongsLearned: (typeof performanceReport.value.numberOfSongsLearned === 'string') ? parseInt(performanceReport.value.numberOfSongsLearned) : performanceReport.value.numberOfSongsLearned}
     const message = !id ? 'Relatório criado com sucesso.' : 'Relatório atualizado com sucesso.';
     const { data }: { data: PerformanceReportDto } = !id
-      ? await axios.post('/performance-report', performanceReport.value)
-      : await axios.put(`/performance-report/${id}`, performanceReport.value);
+      ? await axios.post('/performance-reports', payload)
+      : await axios.put(`/performance-reports/${id}`, payload);
 
     const performanceReportStore = usePerformanceReportStore();
     if (!id) performanceReportStore.addPerformanceReport(data);
@@ -93,11 +90,11 @@ async function save() {
 async function fetchDependencies() {
   try {
     loading.value = true;
-    const { data: studentsData }: { data: StudentDto[] } = await axios.get('/student');
+    const { data: studentsData }: { data: StudentDto[] } = await axios.get('/students');
     students.value = studentsData;
 
-    const { data: classesData }: { data: MusicClassDto[] } = await axios.get('/music-class');
-    musicClasses.value = classesData;
+    const { data: instrumentsData }: { data: InstrumentDto[] } = await axios.get('/instruments');
+    instruments.value = instrumentsData;
   } catch (err) {
     console.error('Erro ao buscar dependências:', err);
   } finally {
@@ -132,11 +129,11 @@ fetchDependencies();
               ></v-select>
             </v-col>
             <v-col class="py-0" cols="12" md="6">
-              <div class="text-subtitle-1 text-medium-emphasis">Turma</div>
+              <div class="text-subtitle-1 text-medium-emphasis">Instrumento</div>
               <v-select
-                v-model="performanceReport.musicClassId"
-                :items="musicClasses"
-                placeholder="Selecione a turma"
+                v-model="performanceReport.instrumentId"
+                :items="instruments"
+                placeholder="Selecione o instrumento"
                 variant="outlined"
                 item-title="name"
                 item-value="id"
@@ -145,13 +142,13 @@ fetchDependencies();
               ></v-select>
             </v-col>
             <v-col class="py-0" cols="12" md="6">
-              <div class="text-subtitle-1 text-medium-emphasis">Nota</div>
+              <div class="text-subtitle-1 text-medium-emphasis">Músicas Aprendidas</div>
               <v-text-field
-                v-model="performanceReport.grade"
+                v-model="performanceReport.numberOfSongsLearned"
                 type="number"
                 density="compact"
-                placeholder="Nota (0.0 a 10.0)"
-                prepend-inner-icon="mdi-star"
+                placeholder="Número de músicas aprendidas"
+                prepend-inner-icon="mdi-music"
                 variant="outlined"
                 :disabled="props.mode === 'view'"
               ></v-text-field>
@@ -159,13 +156,12 @@ fetchDependencies();
             <v-col class="py-0" cols="12" md="6">
               <div class="text-subtitle-1 text-medium-emphasis">Data do Relatório</div>
               <v-text-field
-                v-model="performanceReport.reportDate"
-                type="date"
+                :value="new Date().toLocaleDateString()"
+                type="text"
                 density="compact"
-                placeholder="YYYY-MM-DD"
                 prepend-inner-icon="mdi-calendar"
                 variant="outlined"
-                :disabled="props.mode === 'view'"
+                disabled
               ></v-text-field>
             </v-col>
             <v-col class="py-0" cols="12">

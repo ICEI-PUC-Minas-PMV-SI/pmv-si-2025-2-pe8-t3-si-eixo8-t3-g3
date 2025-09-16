@@ -1,8 +1,7 @@
 export default interface PerformanceReportForm {
   id?: number | null;
-  grade: number | null;
-  notes: string | null;
-  reportDate: string | null;
+  numberOfSongsLearned: number | null;
+  notes?: string | null;
   studentId: number | null;
-  musicClassId: number | null;
+  instrumentId: number | null;
 }
